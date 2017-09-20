@@ -1,8 +1,19 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux'
+import {
+  fetchPosts
+} from './actions/posts'
 import logo from './logo.svg';
 import './App.css';
 
 class App extends Component {
+
+  //TODO: left off here.  how to get fetchPosts dispatched?  connect fn?  
+  componentDidMount() {
+    const { dispatch } = this.props
+    dispatch(fetchPosts())
+  }
+
   render() {
     return (
       <div className="App">

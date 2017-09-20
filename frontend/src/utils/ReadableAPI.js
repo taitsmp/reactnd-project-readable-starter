@@ -1,5 +1,5 @@
 
-const api = "http://localhost:3001"
+  const api = "http://localhost:3001"
 
 //TODO: left off here
 /*
@@ -25,6 +25,19 @@ const testRequestOK = res => {
   }
   return res
 }
+
+export const getAllPosts = () =>
+fetch(`${api}/posts`, { headers })
+  .then(testRequestOK)  
+  .then(res => res.json())
+  //.then(data => data.books)
+
+export const getPostsByCategory = (category) =>
+  fetch(`${api}/${category}/posts`, { headers })
+    .then(testRequestOK)  
+    .then(res => res.json())
+    //.then(data => data.books)
+
 
 /*
 export const get = (bookId) =>
