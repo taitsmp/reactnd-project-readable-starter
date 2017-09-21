@@ -26,11 +26,23 @@ const testRequestOK = res => {
   return res
 }
 
+const logJSON = json => {
+  console.log(json)
+  return json
+}
+
 export const getAllPosts = () =>
 fetch(`${api}/posts`, { headers })
   .then(testRequestOK)  
   .then(res => res.json())
+  .then(logJSON)
   //.then(data => data.books)
+
+export const getAllCategories = () =>
+  fetch(`${api}/categories`, { headers })
+    .then(testRequestOK)  
+    .then(res => res.json())
+    .then(logJSON)
 
 export const getPostsByCategory = (category) =>
   fetch(`${api}/${category}/posts`, { headers })

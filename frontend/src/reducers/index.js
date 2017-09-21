@@ -1,28 +1,45 @@
 import { combineReducers } from 'redux'
-
-/*
 import {
-  ADD_RECIPE,
-  REMOVE_FROM_CALENDAR,
-} from '../actions'
-*/
+  RECEIVE_POSTS,
+} from '../actions/posts'
+import {
+    RECEIVE_CATEGORIES,
+  } from '../actions/categories'
 
 function post (state = {}, action) {
-  switch (action.type) {
-      /*
-    case ADD_RECIPE :
-      const { recipe } = action
+    switch (action.type) {
+    
+        case RECEIVE_POSTS :
+            const { posts } = action
 
-      return {
-        ...state,
-        [recipe.label]: recipe,
-      }
-      */
-    default :
-      return state
-  }
+            return {
+            ...state,
+            posts,
+            }
+
+        default :
+            return state
+    }
 }
+
+function category (state = {}, action) {
+    switch (action.type) {
+        
+        case RECEIVE_CATEGORIES :
+        const { categories } = action
+
+        return {
+            ...state,
+            categories,
+        }
+        
+        default :
+        return state
+    }
+}
+
 
 export default combineReducers({
     post,
+    category,
 })

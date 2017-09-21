@@ -9,9 +9,6 @@ import reducer from './reducers'
 import registerServiceWorker from './registerServiceWorker';
 
 
-ReactDOM.render(<App />, document.getElementById('root'));
-registerServiceWorker();
-
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
 
 //TODO: move store to the "store" directory
