@@ -1,21 +1,16 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux'
-import {
-  fetchPosts
-} from './actions/posts'
-import {
-  fetchCategories
-} from './actions/categories'
+import { connect } from 'react-redux';
+import { fetchPosts } from './actions/posts';
+import { fetchCategories } from './actions/categories';
 import logo from './logo.svg';
 import './App.css';
-import PostsPage from './components/PostsPage'
+import PostsPage from './components/PostsPage';
 
 class App extends Component {
-
   componentDidMount() {
-    const { dispatch } = this.props
-    dispatch(fetchPosts())
-    dispatch(fetchCategories())
+    const { dispatch } = this.props;
+    dispatch(fetchPosts());
+    dispatch(fetchCategories());
   }
 
   render() {
