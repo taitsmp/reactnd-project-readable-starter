@@ -1,10 +1,10 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 
 class PostsList extends Component {
   render() {
-    return <div className="posts-list" />;
+    return <div className="posts-list" />
   }
 }
 
-export default PostsList;
+export default PostsList
