@@ -4,18 +4,11 @@ import PropTypes from 'prop-types'
 //TODO: Remove this class?
 
 class PostListItem extends Component {
- 
-    render() {
-        
-        return (
-        <div className="post-list-item">
-        </div> 
-        )
-    }
+  render() {
+    return <div className="post-list-item" />
+  }
 }
 
-PostsPage.PropTypes = {
-
-}
+PostListItem.PropTypes = {}
 
 export default PostListItem

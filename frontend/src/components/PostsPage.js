@@ -22,8 +22,6 @@ class PostsPage extends Component {
 PostsPage.PropTypes = {}
 
 function mapStateToProps({ post }) {
-  //console.log(state)
-  //console.log(state.post)
   console.log(post.posts)
   return {
     posts: post.posts,
