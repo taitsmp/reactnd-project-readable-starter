@@ -3,8 +3,17 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import PostsList from './PostsList'
 import CategoriesList from './CategoriesList'
+import { fetchPosts } from '../actions/posts';
+import { fetchCategories } from '../actions/categories';
 
 class PostsPage extends Component {
+
+    componentDidMount() {
+        const { dispatch } = this.props;
+        dispatch(fetchPosts());
+        dispatch(fetchCategories());
+      }
+
   render() {
     let { posts } = this.props
     console.log(posts)

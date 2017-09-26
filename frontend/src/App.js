@@ -9,11 +9,7 @@ import PostsPage from './components/PostsPage';
 import ViewPostPage from './components/ViewPostPage';
 
 class App extends Component {
-  componentDidMount() {
-    const { dispatch } = this.props;
-    dispatch(fetchPosts());
-    dispatch(fetchCategories());
-  }
+
 
   render() {
     return (
@@ -22,12 +18,10 @@ class App extends Component {
       <Route exact path='/' render={() => (
         <PostsPage />
       )} />
-      <Route path="/post/view/:postId" render={() => (
-        <ViewPostPage />
-      )} />
+      <Route path="/post/view/:postId" component={ViewPostPage} />
       </div>
-    );
+    )
   }
 }
 
-export default connect()(App);
+export default App;

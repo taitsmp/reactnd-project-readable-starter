@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
+import { Link } from 'react-router-dom'
 import PropTypes from 'prop-types'
 
-//LEFT OFF HERE: add links to ViewPost
 class PostsList extends Component {
   render() {
     let { posts } = this.props
@@ -12,7 +12,9 @@ class PostsList extends Component {
         <ol>
           {posts.map(post => (
             <li>
-              {post.title}, {post.voteScore}
+              <Link to={`/post/view/${post.id}`}>
+                {post.title}, {post.voteScore}
+              </Link>
             </li>
           ))}
         </ol>

@@ -1,7 +1,7 @@
 
   const api = "http://localhost:3001"
 
-//TODO: left off here
+//TODO: refactor API endpoints
 /*
  - this code taken from my-reads.  Refactor to call api endpoints from local server.
  - https://github.com/udacity/reactnd-project-readable-starter/tree/master/api-server
