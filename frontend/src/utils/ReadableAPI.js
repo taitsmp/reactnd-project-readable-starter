@@ -1,5 +1,5 @@
 
-  const api = "http://localhost:3001"
+const api = "http://localhost:3001"
 
 //TODO: refactor API endpoints
 /*
@@ -50,6 +50,17 @@ export const getPostsByCategory = (category) =>
     .then(res => res.json())
     //.then(data => data.books)
 
+export const createComment = (comment) => 
+fetch(`${api}/comments`, {
+  method: 'POST',
+  headers: {
+    ...headers,
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify(comment)
+})
+  .then(testRequestOK)
+  .then(res => res.json())
 
 /*
 export const get = (bookId) =>

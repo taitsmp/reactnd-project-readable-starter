@@ -1,29 +1,42 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
+import { Link } from 'react-router-dom'
+import * as Utils from '../utils/utils'
 
-//LEFT OFF HERE: BrowserRouter doesn't work in App.js if you "connect" it with redux.  Two options
-//1. higher level component that fetches things
-//2. just duplicate calls to fetch post and categories here (bad idea)
-//Review...
-//http://redux.js.org/docs/basics/UsageWithReact.html (container components)
-//https://github.com/brookslyrette/reactit
+import { fetchPosts, postComment } from '../actions/posts'
+//import { fetchCategories } from '../actions/categories'
 
 class ViewPostPage extends Component {
+  componentDidMount() {
+    this.props.fetchPosts()
+  }
+
+  handleAddComment = (event) => {
+    let comment = {
+      id: Utils.uuid()
+    }
+    this.props.postComment(comment)
+  }
+
   render() {
     const { params } = this.props
-    const post = this.props.post || {} //if empty show an error state. 
+    const post = this.props.post || {} //if empty show an error state. Coud use "defaultProps"
     console.log(post)
     return (
-    <div className="view-post-page">
-        title: "{post.title}"
-    </div>
+      <div className="view-post-page">
+        <div>title: "{post.title}"</div>
+        <div>author: {post.author}</div>
+        <div>category: {post.category}</div>
+        <div>body: {post.body}</div>
+
+        <div><Link to="/">home</Link></div>
+      </div>
     )
   }
 }
 
-
 function mapStateToProps({ post }, ownProps) {
-  let posts  = post.posts || []
+  let posts = post.posts || []
   let params = ownProps.match.params || {}
   let postId = params.postId || -1
 
@@ -33,4 +46,11 @@ function mapStateToProps({ post }, ownProps) {
   }
 }
 
-export default connect(mapStateToProps)(ViewPostPage)
+const mapDispatchToProps = (dispatch, ownProps) => {
+  return {
+    fetchPosts: () => dispatch(fetchPosts()),
+    postComment: () => dispatch(postComment()),
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(ViewPostPage)
