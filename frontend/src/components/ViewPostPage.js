@@ -11,11 +11,19 @@ class ViewPostPage extends Component {
     this.props.fetchPosts()
   }
 
-  handleAddComment = (event) => {
+  //function to call whenever a form element changes
+  handleInputChange = (event) => {
+
+  }
+
+  handleSubmit = (event) => {
+    event.preventDefault()
+
     let comment = {
       id: Utils.uuid()
     }
     this.props.postComment(comment)
+
   }
 
   render() {
@@ -24,13 +32,25 @@ class ViewPostPage extends Component {
     console.log(post)
     return (
       <div className="view-post-page">
-        <div>title: "{post.title}"</div>
-        <div>author: {post.author}</div>
-        <div>category: {post.category}</div>
-        <div>body: {post.body}</div>
-
-        <div><Link to="/">home</Link></div>
-      </div>
+        <div className="view-post">
+          <div>title: "{post.title}"</div>
+          <div>author: {post.author}</div>
+          <div>category: {post.category}</div>
+          <div>body: {post.body}</div>
+        </div>
+        <div>
+          <Link to="/">home</Link>
+        </div>
+        <div className="view-post-comments">
+          <h3>Comments</h3>
+          <form onSubmit={this.handleSubmit} >
+            Author: <input type="text" value={this.state.authorInput} onChange={this.handleChange} name="author" />
+            Comment: <br/>
+            <textarea value={this.state.commentInput} onChange={this.handleChange} />
+            <input type="submit" value="Submit" />
+          </form>
+        </div>
+      </div>      
     )
   }
 }
