@@ -18,6 +18,7 @@ const headers = {
 }
 
 const testRequestOK = res => {
+  
   if (!res.ok) {
     let err = new Error(res.statusText)
     err.status = res.status
@@ -50,25 +51,26 @@ export const getPostsByCategory = (category) =>
     .then(res => res.json())
     //.then(data => data.books)
 
-export const createComment = (comment) => 
-fetch(`${api}/comments`, {
-  method: 'POST',
-  headers: {
-    ...headers,
-    'Content-Type': 'application/json'
-  },
-  body: JSON.stringify(comment)
-})
+export const createComment = (comment) => {
+  console.log(JSON.stringify(comment))
+  return fetch(`${api}/comments`, {
+    method: 'POST',
+    headers: {
+      ...headers,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(comment)
+  })
   .then(testRequestOK)
   .then(res => res.json())
+}
+
+export const getPostComments = postId =>
+  fetch(`${api}/post/${postId}/comments`, { headers })
+    .then(testRequestOK)
+    .then(res => res.json())
 
 /*
-export const get = (bookId) =>
-  fetch(`${api}/books/${bookId}`, { headers })
-    .then(testRequestOK)  
-    .then(res => res.json())
-    .then(data => data.book)
-
 export const getAll = () =>
   fetch(`${api}/books`, { headers })
     .then(testRequestOK)  

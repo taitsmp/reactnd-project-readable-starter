@@ -3,27 +3,56 @@ import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 import * as Utils from '../utils/utils'
 
-import { fetchPosts, postComment } from '../actions/posts'
+import { postComment, fetchPostComments } from '../actions/comments'
+import { fetchPosts } from '../actions/posts'
 //import { fetchCategories } from '../actions/categories'
+
+
 
 class ViewPostPage extends Component {
   componentDidMount() {
+    const { postId } = this.props.match.params
     this.props.fetchPosts()
+    if (postId) 
+    {
+      //console.log('fetch comments')
+      this.props.fetchComments(postId)
+    }
+
   }
 
+  state = {
+    authorInput: '',
+    commentInput: '',
+  }
+  
   //function to call whenever a form element changes
   handleInputChange = (event) => {
-
+    const { name, value } = event.target
+    console.log(name)
+    this.setState({
+      [name]: value,
+    })
   }
 
+  //creates new comment.
   handleSubmit = (event) => {
     event.preventDefault()
 
+    const { post } = this.props
+    const { commentInput, authorInput } = this.state
+
     let comment = {
-      id: Utils.uuid()
+      id: Utils.uuid(),
+      parentId: post.id,
+      timestamp: Date.now(),
+      body: commentInput,
+      author: authorInput, 
+      votescore: 0,
+      deleted: false,
+      parentDeleted: false,
     }
     this.props.postComment(comment)
-
   }
 
   render() {
@@ -44,9 +73,10 @@ class ViewPostPage extends Component {
         <div className="view-post-comments">
           <h3>Comments</h3>
           <form onSubmit={this.handleSubmit} >
-            Author: <input type="text" value={this.state.authorInput} onChange={this.handleChange} name="author" />
+            Author: <input type="text" value={this.state.authorInput} onChange={this.handleInputChange} name="authorInput" />
+            <div style={{marginBottom:20}}/>
             Comment: <br/>
-            <textarea value={this.state.commentInput} onChange={this.handleChange} />
+            <textarea value={this.state.commentInput} onChange={this.handleInputChange} name="commentInput" />
             <input type="submit" value="Submit" />
           </form>
         </div>
@@ -55,21 +85,25 @@ class ViewPostPage extends Component {
   }
 }
 
-function mapStateToProps({ post }, ownProps) {
-  let posts = post.posts || []
-  let params = ownProps.match.params || {}
-  let postId = params.postId || -1
-
+function mapStateToProps({ post, comment }, ownProps) {
+  const posts = post.posts || []
+  const params = ownProps.match.params || {}
+  const postId = params.postId || 0
+  const allComments = comment.comments || {}
+  const comments = allComments[postId] || []
+  
   console.log(ownProps)
   return {
-    post: posts.find(p => p.id === postId),
+    post: posts.find(p => p.id === postId) || {},
+    comments,
   }
 }
 
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
     fetchPosts: () => dispatch(fetchPosts()),
-    postComment: () => dispatch(postComment()),
+    fetchComments: postId => dispatch(fetchPostComments(postId)),
+    postComment: comment => dispatch(postComment(comment)),
   }
 }
 
