@@ -20,6 +20,7 @@ const headers = {
 const testRequestOK = res => {
   
   if (!res.ok) {
+    console.log(res)
     let err = new Error(res.statusText)
     err.status = res.status
     throw err
@@ -66,7 +67,7 @@ export const createComment = (comment) => {
 }
 
 export const getPostComments = postId =>
-  fetch(`${api}/post/${postId}/comments`, { headers })
+  fetch(`${api}/posts/${postId}/comments`, { headers })
     .then(testRequestOK)
     .then(res => res.json())
 

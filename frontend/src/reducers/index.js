@@ -8,7 +8,6 @@ function comment(state = {}, action) {
     
   switch (action.type) {
     case RECEIVE_POST_COMMENTS: {
-      console.log('receiveing post comments')
       const { comments, postId } = action
       return {
         ...state,
