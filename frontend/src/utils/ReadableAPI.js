@@ -1,5 +1,4 @@
-
-const api = "http://localhost:3001"
+const api = 'http://localhost:3001'
 
 //TODO: refactor API endpoints
 /*
@@ -10,15 +9,16 @@ const api = "http://localhost:3001"
 // Generate a unique token for storing your bookshelf data on the backend server.
 let token = localStorage.token
 if (!token)
-  token = localStorage.token = Math.random().toString(36).substr(-8)
+  token = localStorage.token = Math.random()
+    .toString(36)
+    .substr(-8)
 
 const headers = {
-  'Accept': 'application/json',
-  'Authorization': token
+  Accept: 'application/json',
+  Authorization: token,
 }
 
 const testRequestOK = res => {
-  
   if (!res.ok) {
     console.log(res)
     let err = new Error(res.statusText)
@@ -34,37 +34,106 @@ const logJSON = json => {
 }
 
 export const getAllPosts = () =>
-fetch(`${api}/posts`, { headers })
-  .then(testRequestOK)  
-  .then(res => res.json())
-  .then(logJSON)
-  //.then(data => data.books)
+  fetch(`${api}/posts`, { headers })
+    .then(testRequestOK)
+    .then(res => res.json())
+    .then(logJSON)
+//.then(data => data.books)
 
 export const getAllCategories = () =>
   fetch(`${api}/categories`, { headers })
-    .then(testRequestOK)  
+    .then(testRequestOK)
     .then(res => res.json())
     .then(logJSON)
 
-export const getPostsByCategory = (category) =>
+export const getPostsByCategory = category =>
   fetch(`${api}/${category}/posts`, { headers })
-    .then(testRequestOK)  
+    .then(testRequestOK)
     .then(res => res.json())
-    //.then(data => data.books)
+//.then(data => data.books)
 
-export const createComment = (comment) => {
+export const createComment = comment => {
   console.log(JSON.stringify(comment))
   return fetch(`${api}/comments`, {
     method: 'POST',
     headers: {
       ...headers,
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
     },
-    body: JSON.stringify(comment)
+    body: JSON.stringify(comment),
   })
-  .then(testRequestOK)
-  .then(res => res.json())
+    .then(testRequestOK)
+    .then(res => res.json())
 }
+
+export const createPost = post => {
+  //console.log(JSON.stringify(comment))
+  return fetch(`${api}/posts`, {
+    method: 'POST',
+    headers: {
+      ...headers,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(post),
+  })
+    .then(testRequestOK)
+    .then(res => res.json())
+}
+
+//voteStr either 'upVote' or 'downVote'
+//curl -H 'Authorization: tait' -H "Content-Type: application/json" -X POST -d '{"option":"upVote"}' localhost:3001/posts/8xf0y6ziyjabvozdd253nd
+export const voteOnPost = (postId, voteStr) => {
+  //console.log(JSON.stringify(comment))
+  const payload = { option: voteStr }
+  return fetch(`${api}/posts/${postId}`, {
+    method: 'POST',
+    headers: {
+      ...headers,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(payload),
+  })
+    .then(testRequestOK)
+    .then(res => res.json())
+}
+
+//voteStr either 'upVote' or 'downVote'
+export const voteOnComment = (commentId, voteStr) => {
+  //console.log(JSON.stringify(comment))
+  const payload = { option: voteStr }
+  return fetch(`${api}/comments/${commentId}`, {
+    method: 'POST',
+    headers: {
+      ...headers,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(payload),
+  })
+    .then(testRequestOK)
+    .then(res => res.json())
+}
+
+export const deletePost = postId =>
+  fetch(`${api}/posts/${postId}`, {
+    method: 'DELETE',
+    headers: {
+      ...headers,
+      'Content-Type': 'application/json',
+    },
+  })
+    .then(testRequestOK)
+    .then(res => res.json())
+
+export const deleteComment = commentId =>
+  fetch(`${api}/comments/${commentId}`, {
+    method: 'DELETE',
+    headers: {
+      ...headers,
+      'Content-Type': 'application/json',
+    },
+  })
+    .then(testRequestOK)
+    .then(res => res.json())
 
 export const getPostComments = postId =>
   fetch(`${api}/posts/${postId}/comments`, { headers })

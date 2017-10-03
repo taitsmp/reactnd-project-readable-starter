@@ -7,27 +7,23 @@ import { postComment, fetchPostComments } from '../actions/comments'
 import { fetchPosts } from '../actions/posts'
 //import { fetchCategories } from '../actions/categories'
 
-
-
 class ViewPostPage extends Component {
   componentDidMount() {
     const { postId } = this.props.match.params
     this.props.fetchPosts()
-    if (postId) 
-    {
+    if (postId) {
       //console.log('fetch comments')
       this.props.fetchComments(postId)
     }
-
   }
 
   state = {
     authorInput: '',
     commentInput: '',
   }
-  
+
   //function to call whenever a form element changes
-  handleInputChange = (event) => {
+  handleInputChange = event => {
     const { name, value } = event.target
     console.log(name)
     this.setState({
@@ -36,7 +32,7 @@ class ViewPostPage extends Component {
   }
 
   //creates new comment.
-  handleSubmit = (event) => {
+  handleSubmit = event => {
     event.preventDefault()
 
     const { post } = this.props
@@ -47,7 +43,7 @@ class ViewPostPage extends Component {
       parentId: post.id,
       timestamp: Date.now(),
       body: commentInput,
-      author: authorInput, 
+      author: authorInput,
       votescore: 0,
       deleted: false,
       parentDeleted: false,
@@ -72,15 +68,25 @@ class ViewPostPage extends Component {
         </div>
         <div className="view-post-comments">
           <h3>Comments</h3>
-          <form onSubmit={this.handleSubmit} >
-            Author: <input type="text" value={this.state.authorInput} onChange={this.handleInputChange} name="authorInput" />
-            <div style={{marginBottom:20}}/>
-            Comment: <br/>
-            <textarea value={this.state.commentInput} onChange={this.handleInputChange} name="commentInput" />
+          <form onSubmit={this.handleSubmit}>
+            Author:{' '}
+            <input
+              type="text"
+              value={this.state.authorInput}
+              onChange={this.handleInputChange}
+              name="authorInput"
+            />
+            <div style={{  marginBottom: 20 }} />
+            Comment: <br />
+            <textarea
+              value={this.state.commentInput}
+              onChange={this.handleInputChange}
+              name="commentInput"
+            />
             <input type="submit" value="Submit" />
           </form>
         </div>
-      </div>      
+      </div>
     )
   }
 }
@@ -91,7 +97,7 @@ function mapStateToProps({ post, comment }, ownProps) {
   const postId = params.postId || 0
   const allComments = comment.comments || {}
   const comments = allComments[postId] || []
-  
+
   console.log(ownProps)
   return {
     post: posts.find(p => p.id === postId) || {},
