@@ -48,9 +48,14 @@ function comment(state = {}, action) {
     case DECREMENT_COMMENT_VOTE:
     case INCREMENT_COMMENT_VOTE: {
       const { comment } = action
+      let postComments = state[comment.parentId].map(c => {
+        if (c.id === comment.id) return comment
+        else return c
+      })
+
       return {
         ...state,
-        [comment.parentId]: comment,
+        [comment.parentId]: postComments,
       }
     }
 
@@ -72,12 +77,16 @@ function post(state = {}, action) {
     case DECREMENT_POST_VOTE:
     case INCREMENT_POST_VOTE: {
       const { post } = action
-      return state.reduce((posts, p) => {
+      const postArray = state.posts.reduce((posts, p) => {
         if (post.id === p.id) {
           p = post
         }
         return [...posts, p]
       }, [])
+      return {
+        ...state,
+        posts: postArray,
+      }
     }
 
     case CREATE_POST: {
@@ -102,7 +111,9 @@ function category(state = {}, action) {
   switch (action.type) {
     case RECEIVE_CATEGORIES: {
       const { categories } = action
-
+      console.log("receive categories")
+      console.log(categories)
+      console.log(state)
       return {
         ...state,
         categories,

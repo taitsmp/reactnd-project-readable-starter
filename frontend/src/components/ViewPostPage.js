@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 import * as Utils from '../utils/utils'
 
-import { postComment, fetchPostComments } from '../actions/comments'
+import { postComment, fetchPostComments, upVoteComment, downVoteComment } from '../actions/comments'
 import { fetchPosts } from '../actions/posts'
 //import { fetchCategories } from '../actions/categories'
 
@@ -31,6 +31,14 @@ class ViewPostPage extends Component {
     })
   }
 
+  //this is wrong.  Need two functions. one for each vote type.  Need bound functions with commentid passed in. 
+  handleVote = (direction, commentId) => {
+
+    //check name here and decide if we're upvoting or downvoting.
+    if (direction === 'up') this.props.upVoteComment(commentId)
+    else this.props.downVoteComment(commentId)
+  }
+
   //creates new comment.
   handleSubmit = event => {
     event.preventDefault()
@@ -44,16 +52,20 @@ class ViewPostPage extends Component {
       timestamp: Date.now(),
       body: commentInput,
       author: authorInput,
-      votescore: 0,
+      voteScore: 0,
       deleted: false,
       parentDeleted: false,
     }
     this.props.postComment(comment)
+    this.setState({ commentInput:'', authorInput:''})
   }
 
   render() {
     const { params } = this.props
     const post = this.props.post || {} //if empty show an error state. Coud use "defaultProps"
+    const comments = this.props.comments
+    console.log('comments=' + comments)
+
     console.log(post)
     return (
       <div className="view-post-page">
@@ -76,7 +88,7 @@ class ViewPostPage extends Component {
               onChange={this.handleInputChange}
               name="authorInput"
             />
-            <div style={{  marginBottom: 20 }} />
+            <div style={{ marginBottom: 20 }} />
             Comment: <br />
             <textarea
               value={this.state.commentInput}
@@ -85,6 +97,17 @@ class ViewPostPage extends Component {
             />
             <input type="submit" value="Submit" />
           </form>
+          <ol className="comment-list">
+            {comments.map(comment => (
+              <li key={comment.id}>
+                <div>name: {comment.author}</div><br/>
+                <div>comment: {comment.body}</div><br/>
+                <div>votes: {comment.voteScore}</div>
+                <span onClick={() => this.handleVote('up', comment.id)}> + </span> /
+                <span onClick={() => this.handleVote('down', comment.id)}> - </span>
+              </li>
+            ))}
+          </ol>
         </div>
       </div>
     )
@@ -95,9 +118,9 @@ function mapStateToProps({ post, comment }, ownProps) {
   const posts = post.posts || []
   const params = ownProps.match.params || {}
   const postId = params.postId || 0
-  const allComments = comment.comments || {}
-  const comments = allComments[postId] || []
-
+  const comments = comment[postId] || []
+  console.log('postId='+postId)
+  console.log(comments)
   console.log(ownProps)
   return {
     post: posts.find(p => p.id === postId) || {},
@@ -110,6 +133,8 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     fetchPosts: () => dispatch(fetchPosts()),
     fetchComments: postId => dispatch(fetchPostComments(postId)),
     postComment: comment => dispatch(postComment(comment)),
+    upVoteComment: commentId => dispatch(upVoteComment(commentId)),
+    downVoteComment: commentId => dispatch(downVoteComment(commentId)),
   }
 }
 

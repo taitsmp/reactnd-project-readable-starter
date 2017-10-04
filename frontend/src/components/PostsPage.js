@@ -16,14 +16,14 @@ class PostsPage extends Component {
       }
 
   render() {
-    let { posts } = this.props
+    let { posts, category } = this.props
     console.log(posts)
     //console.log(this.props)
 
     return (
       <div className="posts-page">
         <CategoriesList />
-        <PostsList />
+        <PostsList category={category} />
       </div>
     )
   }
@@ -31,10 +31,14 @@ class PostsPage extends Component {
 
 PostsPage.PropTypes = {}
 
-function mapStateToProps({ post }) {
+function mapStateToProps({ post }, ownProps) {
   console.log(post.posts)
+  let category = undefined
+  if (ownProps.match && ownProps.match.params) category = ownProps.match.params.category
+  console.log('category prop='+category)
   return {
     posts: post.posts,
+    category,
   }
 }
 

@@ -98,6 +98,7 @@ export const voteOnPost = (postId, voteStr) => {
 }
 
 //voteStr either 'upVote' or 'downVote'
+//curl -H 'Authorization: tait' -H "Content-Type: application/json" -X POST -d '{"option":"upVote"}' localhost:3001/comments/894tuq4ut84ut8v4t8wun89g | jq '.'
 export const voteOnComment = (commentId, voteStr) => {
   //console.log(JSON.stringify(comment))
   const payload = { option: voteStr }

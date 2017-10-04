@@ -18,6 +18,7 @@ class App extends Component {
       <Route exact path='/' render={() => (
         <PostsPage />
       )} />
+      <Route path="/by-category/:category" component={PostsPage} />
       <Route path="/post/view/:postId" component={ViewPostPage} />
       </div>
     )
