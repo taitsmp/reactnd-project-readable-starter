@@ -2,10 +2,17 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 import * as Utils from '../utils/utils'
-
-import { postComment, fetchPostComments, upVoteComment, downVoteComment } from '../actions/comments'
+import {
+  postComment,
+  putComment,
+  fetchPostComments,
+  upVoteComment,
+  downVoteComment,
+} from '../actions/comments'
 import { fetchPosts } from '../actions/posts'
 //import { fetchCategories } from '../actions/categories'
+
+import { EditComment } from './EditComment'
 
 class ViewPostPage extends Component {
   componentDidMount() {
@@ -17,49 +24,23 @@ class ViewPostPage extends Component {
     }
   }
 
-  state = {
-    authorInput: '',
-    commentInput: '',
+  //handes create and update ops
+  //LEFT OFF HERE.  I think this is a deadend.  Let's swap it out with a modal instead.  
+  //consider React bootstrap. 
+  //modal example given below. 
+  //https://react-bootstrap.github.io/components.html#utilities
+  handleUpdateComment = (op, comment) => {
+    if (op === 'new') this.props.postComment(comment)
+    else this.props.putComment(comment)
   }
 
-  //function to call whenever a form element changes
-  handleInputChange = event => {
-    const { name, value } = event.target
-    console.log(name)
+  showCommentEdit = commentId => {
+    const comment = this.props.comments.find(c => (commentId = c.id))
     this.setState({
-      [name]: value,
+      commentForm: 'show',
+      editComment: comment,
     })
   }
-
-  //this is wrong.  Need two functions. one for each vote type.  Need bound functions with commentid passed in. 
-  handleVote = (direction, commentId) => {
-
-    //check name here and decide if we're upvoting or downvoting.
-    if (direction === 'up') this.props.upVoteComment(commentId)
-    else this.props.downVoteComment(commentId)
-  }
-
-  //creates new comment.
-  handleSubmit = event => {
-    event.preventDefault()
-
-    const { post } = this.props
-    const { commentInput, authorInput } = this.state
-
-    let comment = {
-      id: Utils.uuid(),
-      parentId: post.id,
-      timestamp: Date.now(),
-      body: commentInput,
-      author: authorInput,
-      voteScore: 0,
-      deleted: false,
-      parentDeleted: false,
-    }
-    this.props.postComment(comment)
-    this.setState({ commentInput:'', authorInput:''})
-  }
-
   render() {
     const { params } = this.props
     const post = this.props.post || {} //if empty show an error state. Coud use "defaultProps"
@@ -80,37 +61,29 @@ class ViewPostPage extends Component {
         </div>
         <div className="view-post-comments">
           <h3>Comments</h3>
-          <form onSubmit={this.handleSubmit}>
-            Author:{' '}
-            <input
-              type="text"
-              value={this.state.authorInput}
-              onChange={this.handleInputChange}
-              name="authorInput"
+          {this.state.commentForm !== 'hide' && (
+            <EditComment
+              postId={post.id}
+              comment={this.state.editComment}
+              handleUpdateComment={this.handleUpdateComment}
             />
-            <div style={{ marginBottom: 20 }} />
-            Comment: <br />
-            <textarea
-              value={this.state.commentInput}
-              onChange={this.handleInputChange}
-              name="commentInput"
-            />
-            <input type="submit" value="Submit" />
-          </form>
+          )}
           <ol className="comment-list">
             {comments.map(comment => (
               <li key={comment.id}>
-                <div>name: {comment.author}</div><br/>
-                <div>comment: {comment.body}</div><br/>
+                <div>name: {comment.author}</div>
+                <br />
+                <div>comment: {comment.body}</div>
+                <br />
                 <div>votes: {comment.voteScore}</div>
                 <span onClick={() => this.handleVote('up', comment.id)}> + </span> /
                 <span onClick={() => this.handleVote('down', comment.id)}> - </span>
+                <span onClick={() => this.showCommentEdit(comment.id)}> Edit Comment</span>
               </li>
             ))}
           </ol>
         </div>
         <Link to={`/post/edit/${post.id}`}>Edit the post</Link>
-
       </div>
     )
   }
@@ -121,7 +94,7 @@ function mapStateToProps({ post, comment }, ownProps) {
   const params = ownProps.match.params || {}
   const postId = params.postId || 0
   const comments = comment[postId] || []
-  console.log('postId='+postId)
+  console.log('postId=' + postId)
   console.log(comments)
   console.log(ownProps)
   return {
@@ -135,6 +108,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     fetchPosts: () => dispatch(fetchPosts()),
     fetchComments: postId => dispatch(fetchPostComments(postId)),
     postComment: comment => dispatch(postComment(comment)),
+    putComment: comment => dispatch(putComment(comment)),
     upVoteComment: commentId => dispatch(upVoteComment(commentId)),
     downVoteComment: commentId => dispatch(downVoteComment(commentId)),
   }
