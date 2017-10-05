@@ -2,6 +2,7 @@ import * as ReadableAPI from '../utils/ReadableAPI'
 
 export const RECEIVE_POST_COMMENTS = 'RECEIVE_POST_COMMENTS'
 export const CREATE_COMMENT = 'CREATE_COMMENT'
+export const UPDATE_COMMENT = 'UPDATE_COMMENT'
 export const REMOVE_COMMENT = 'REMOVE_COMMENT'
 export const INCREMENT_COMMENT_VOTE = 'INCREMENT_COMMENT_VOTE'
 export const DECREMENT_COMMENT_VOTE = 'DECREMENT_COMMENT_VOTE'
@@ -16,6 +17,11 @@ export const receivePostComments = (comments, postId) => {
 
 export const createComment = comment => ({
   type: CREATE_COMMENT,
+  comment,
+})
+
+export const updateComment = comment => ({
+  type: UPDATE_COMMENT,
   comment,
 })
 
@@ -42,6 +48,9 @@ export const fetchPostComments = postId => dispatch =>
 
 export const postComment = comment => dispatch =>
   ReadableAPI.createComment(comment).then(res => dispatch(createComment(comment)))
+
+export const putComment = comment => dispatch =>
+  ReadableAPI.updateComment(comment).then(res => dispatch(updateComment(comment)))
 
 export const deleteComment = (commentId, postId) => dispatch =>
   ReadableAPI.deleteComment(commentId).then(res => dispatch(removeComment(commentId, postId)))

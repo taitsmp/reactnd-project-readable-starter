@@ -66,6 +66,20 @@ export const createComment = comment => {
     .then(res => res.json())
 }
 
+export const updateComment = comment => {
+  //console.log(JSON.stringify(comment))
+  return fetch(`${api}/comments/${comment.id}`, {
+    method: 'PUT',
+    headers: {
+      ...headers,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(comment),
+  })
+    .then(testRequestOK)
+    .then(res => res.json())
+}
+
 export const createPost = post => {
   console.log(post)
   return fetch(`${api}/posts`, {
