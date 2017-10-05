@@ -2,6 +2,7 @@ import * as ReadableAPI from '../utils/ReadableAPI'
 
 export const RECEIVE_POSTS = 'RECEIVE_POSTS'
 export const CREATE_POST = 'CREATE_POST'
+export const UPDATE_POST = 'UPDATE_POST'
 export const REMOVE_POST = 'REMOVE_POST'
 export const INCREMENT_POST_VOTE = 'INCREMENT_POST_VOTE'
 export const DECREMENT_POST_VOTE = 'DECREMENT_POST_VOTE'
@@ -14,6 +15,11 @@ export const receivePosts = posts => ({
 
 export const createPost = post => ({
   type: CREATE_POST,
+  post,
+})
+
+export const updatePost = post => ({
+  type: UPDATE_POST,
   post,
 })
 
@@ -39,6 +45,9 @@ export const fetchPosts = () => dispatch =>
 
 export const postPost = post => dispatch =>
   ReadableAPI.createPost(post).then(res => dispatch(createPost(post)))
+
+export const putPost = post => dispatch =>
+  ReadableAPI.updatePost(post).then(res => dispatch(updatePost(post)))
 
 export const deletePost = postId => dispatch =>
   ReadableAPI.deletePost(postId).then(res => dispatch(removePost(postId)))

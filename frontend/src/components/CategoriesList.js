@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
+import { Link } from 'react-router-dom'
 //import CategoryListItem from './CategoryListItem'
 
 class CategoriesList extends Component {
@@ -9,7 +10,13 @@ class CategoriesList extends Component {
 
     return (
       <div className="categories-list">
-        <ol>{categories.map(category => <li>{category.name}</li>)}</ol>
+        <ol>
+          {categories.map(category => (
+            <li>
+              <Link to={`/by-category/${category.path}`}>{category.name}</Link>
+            </li>
+          ))}
+        </ol>
       </div>
     )
   }

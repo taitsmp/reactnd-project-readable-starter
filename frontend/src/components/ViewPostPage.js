@@ -109,6 +109,8 @@ class ViewPostPage extends Component {
             ))}
           </ol>
         </div>
+        <Link to={`/post/edit/${post.id}`}>Edit the post</Link>
+
       </div>
     )
   }

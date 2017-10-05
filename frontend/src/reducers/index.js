@@ -4,9 +4,10 @@ import {
   INCREMENT_POST_VOTE,
   DECREMENT_POST_VOTE,
   CREATE_POST,
+  UPDATE_POST,
   REMOVE_POST,
 } from '../actions/posts'
-import { 
+import {
   RECEIVE_POST_COMMENTS,
   CREATE_COMMENT,
   REMOVE_COMMENT,
@@ -16,8 +17,8 @@ import {
 import { RECEIVE_CATEGORIES } from '../actions/categories'
 
 function comment(state = {}, action) {
-    console.log('comment reducer: '+ action.type)
-    
+  console.log('comment reducer: ' + action.type)
+
   switch (action.type) {
     case RECEIVE_POST_COMMENTS: {
       const { comments, postId } = action
@@ -32,7 +33,7 @@ function comment(state = {}, action) {
       let postComments = state[comment.parentId] || []
       return {
         ...state,
-        [comment.parentId]: [...postComments, comment]
+        [comment.parentId]: [...postComments, comment],
       }
     }
 
@@ -91,15 +92,36 @@ function post(state = {}, action) {
 
     case CREATE_POST: {
       const { post } = action
-      return [...state, post]
+      const postArray = [...state.posts, post ]
+      return {
+        ...state, 
+        posts: postArray,
+      }
+    }
+
+    case UPDATE_POST: {
+      const { post } = action
+      console.log(state)
+      const postArray = state.posts.reduce((posts, p) => {
+        if (post.id === p.id) p = post
+        return [...posts, p]
+      }, [])
+      return {
+        ...state,
+        posts: postArray,
+      }
     }
 
     case REMOVE_POST: {
       const { postId } = action
-      return state.reduce((posts, p) => {
+      const postArray = state.posts.reduce((posts, p) => {
         if (postId === p.id) return posts
         else return [...posts, p]
       }, [])
+      return {
+        ...state,
+        posts: postArray,
+      }
     }
 
     default:
@@ -111,7 +133,7 @@ function category(state = {}, action) {
   switch (action.type) {
     case RECEIVE_CATEGORIES: {
       const { categories } = action
-      console.log("receive categories")
+      console.log('receive categories')
       console.log(categories)
       console.log(state)
       return {

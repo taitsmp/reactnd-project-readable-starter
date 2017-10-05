@@ -67,9 +67,25 @@ export const createComment = comment => {
 }
 
 export const createPost = post => {
-  //console.log(JSON.stringify(comment))
+  console.log(post)
   return fetch(`${api}/posts`, {
     method: 'POST',
+    headers: {
+      ...headers,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(post),
+  })
+    .then(testRequestOK)
+    .then(res => res.json())
+}
+
+//this will successfully set a category. 
+//curl -H 'Authorization: 9ssgac8o'  -H "Content-Type: application/json" -X PUT -d '{"category":"dorks", "title":"new title"}' localhost:3001/posts/y5n8ipw1g2
+export const updatePost = post => {
+  //console.log(JSON.stringify(comment))
+  return fetch(`${api}/posts/${post.id}`, {
+    method: 'PUT',
     headers: {
       ...headers,
       'Content-Type': 'application/json',
