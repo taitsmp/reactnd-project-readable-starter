@@ -2,6 +2,10 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 import * as Utils from '../utils/utils'
+//import { FaThumbsDown, FaThumbsUp } from 'react-icons/fa'
+import FaThumbsDown  from 'react-icons/lib/fa/thumbs-down'
+import FaThumbsUp from 'react-icons/lib/fa/thumbs-up'
+
 
 import { postComment, fetchPostComments, upVoteComment, downVoteComment } from '../actions/comments'
 import { fetchPosts } from '../actions/posts'
@@ -31,7 +35,15 @@ class ViewPostPage extends Component {
     })
   }
 
-  //this is wrong.  Need two functions. one for each vote type.  Need bound functions with commentid passed in. 
+/*LEFT OFF HERE: working on styling comments a bit (especially forms).  Also need to scroll to the comment form when editing
+
+* https://github.com/rafrex/react-router-hash-link (scrolling)
+* https://developer.mozilla.org/en-US/docs/Learn/HTML/Forms/Your_first_HTML_form
+* https://medium.com/@aghh1504/4-four-ways-to-style-react-components-ac6f323da822 (styling)
+* https://www.sitepoint.com/style-react-components-styled-components/
+
+*/
+
   handleVote = (direction, commentId) => {
 
     //check name here and decide if we're upvoting or downvoting.
@@ -64,6 +76,7 @@ class ViewPostPage extends Component {
     const { params } = this.props
     const post = this.props.post || {} //if empty show an error state. Coud use "defaultProps"
     const comments = this.props.comments
+    const bsize=12
     console.log('comments=' + comments)
 
     console.log(post)
@@ -97,17 +110,21 @@ class ViewPostPage extends Component {
             />
             <input type="submit" value="Submit" />
           </form>
-          <ol className="comment-list">
+          <div className="comment-list">
             {comments.map(comment => (
-              <li key={comment.id}>
-                <div>name: {comment.author}</div><br/>
-                <div>comment: {comment.body}</div><br/>
+              <div className='comment'>
+                <div>author: {comment.author}</div>
+                <div>{comment.body}</div>
                 <div>votes: {comment.voteScore}</div>
-                <span onClick={() => this.handleVote('up', comment.id)}> + </span> /
-                <span onClick={() => this.handleVote('down', comment.id)}> - </span>
-              </li>
+                <button onClick={() => this.handleVote('up', comment.id)} className='icon-btn'>
+                  <FaThumbsUp />
+                </button>
+                <button onClick={() => this.handleVote('down', comment.id)} className='icon-btn'>
+                  <FaThumbsDown />2
+                </button>
+              </div>
             ))}
-          </ol>
+          </div>
         </div>
         <Link to={`/post/edit/${post.id}`}>Edit the post</Link>
 

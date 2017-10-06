@@ -3,3 +3,13 @@ body {
   padding: 0;
   font-family: sans-serif;
 }
+
+.icon-btn {
+  background: none;
+  border: none;
+}
+
+.comment {
+  text-align: left;
+  padding-bottom: 15px;
+}
