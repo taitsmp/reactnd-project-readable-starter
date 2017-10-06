@@ -2,6 +2,10 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
+import { Nav, NavItem } from 'react-bootstrap';
+import { LinkContainer } from 'react-router-bootstrap'
+
+
 //import CategoryListItem from './CategoryListItem'
 
 class CategoriesList extends Component {
@@ -10,13 +14,13 @@ class CategoriesList extends Component {
 
     return (
       <div className="categories-list">
-        <ol>
+        <Nav>
           {categories.map(category => (
-            <li>
-              <Link to={`/by-category/${category.path}`}>{category.name}</Link>
-            </li>
+            <LinkContainer to={`/by-category/${category.path}`}>{category.name}
+            <NavItem eventKey={category.path}>{category.name}</NavItem>
+            </LinkContainer>
           ))}
-        </ol>
+        </Nav>
       </div>
     )
   }

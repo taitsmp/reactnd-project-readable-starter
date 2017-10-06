@@ -2,7 +2,12 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 import PropTypes from 'prop-types'
+import { ListGroup, ListGroupItem } from 'react-bootstrap';
+import { LinkContainer } from 'react-router-bootstrap'
+
+
 import { upVotePost, downVotePost } from '../actions/posts'
+
 
 class PostsList extends Component {
 
@@ -19,18 +24,17 @@ class PostsList extends Component {
 
     return (
       <div className="posts-list">
-        <ol>
+        <ListGroup>
           {posts.map(post => (
-            <li>
-              <Link to={`/post/view/${post.id}`}>
-                Title: {post.title} 
-              </Link>
+            
+              <ListGroupItem >
+                <Link to={`/post/view/${post.id}`}>Title: {post.title}</Link>
               , Votes: {post.voteScore}
               <span onClick={() => this.handleVote('up', post.id)}> + </span> /
               <span onClick={() => this.handleVote('down', post.id)}> - </span>
-            </li>
+            </ListGroupItem>
           ))}
-        </ol>
+        </ListGroup>
       </div>
     )
   }
