@@ -94,42 +94,48 @@ class EditPostPage extends Component {
     return (
       <div id="edit-post-page">
         <form onSubmit={this.handleSubmit}>
-          <label>
-            author:
+          <div>
+            <label htmlFor="authorInput">author:</label>
             <input
               type="text"
               value={this.state.authorInput}
               onChange={this.handleInputChange}
               name="authorInput"
             />
-          </label>
-          <div style={{ marginBottom: 20 }} />
-          <label>
-            title:
+          </div>
+          <div>
+            <label htmlFor="titleInput">title:</label>
             <input
               type="text"
               value={this.state.titleInput}
               onChange={this.handleInputChange}
               name="titleInput"
             />
-          </label>
-          <label>
-            category:
-            <select name="categorySelect" value={this.state.categorySelect} onChange={this.handleInputChange}>
-              {categories.map(category => <option key={category.path} value={category.path}>{category.name}</option>)}
+          </div>
+          <div>
+            <label htmlFor="categorySelect">category:</label>
+            <select
+              name="categorySelect"
+              value={this.state.categorySelect}
+              onChange={this.handleInputChange}>
+              {categories.map(category => (
+                <option key={category.path} value={category.path}>
+                  {category.name}
+                </option>
+              ))}
             </select>
-          </label>
-          <div style={{ marginBottom: 20 }} />
-          <label>
-            body:
+          </div>
+          <div>
+            <label htmlFor="bodyInput">body:</label>
             <textarea
               value={this.state.bodyInput}
               onChange={this.handleInputChange}
               name="bodyInput"
             />
-          </label>
-          <div style={{ marginBottom: 20 }} />
-          <input type="submit" value="Submit" />
+          </div>
+          <div>
+            <input type="submit" value="Submit" />
+          </div>
         </form>
         {mode === 'update' && <Link to={`/post/view/${post.id}`}>View the post</Link>}
       </div>
