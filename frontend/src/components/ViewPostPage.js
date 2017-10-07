@@ -36,10 +36,20 @@ class ViewPostPage extends Component {
     })
   }
 
-  /*LEFT OFF HERE: working on styling comments a bit (especially forms).  Also need to scroll to the comment form when editing
+  handleEditComment = (commentId) => {
+    const comment = this.props.comments.find(c => c.id === commentId)
 
-* https://github.com/rafrex/react-router-hash-link (scrolling)
-* https://developer.mozilla.org/en-US/docs/Learn/HTML/Forms/Your_first_HTML_form
+    this.setState({
+      authorInput: comment.author,
+      commentInput: comment.body,
+    })
+    const cform = document.getElementById('edit-comments')
+    const top = cform.getBoundingClientRect().top + window.scrollY
+    console.log("top is "+ top)
+    window.scrollTo(0, top)
+  }
+
+  /*LEFT OFF HERE:
 * https://medium.com/@aghh1504/4-four-ways-to-style-react-components-ac6f323da822 (styling)
 * https://www.sitepoint.com/style-react-components-styled-components/
 
@@ -132,6 +142,9 @@ class ViewPostPage extends Component {
                     <FaEdit />
                   </button>
                 </Link>
+                <button onClick={() => this.handleEditComment(comment.id)} className="icon-btn" >
+                <FaEdit />
+                </button>
               </div>
             ))}
           </div>
