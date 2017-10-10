@@ -155,16 +155,14 @@ export const deletePost = postId =>
     .then(testRequestOK)
     .then(res => res.json())
 
-export const deleteComment = commentId =>
+export const deleteComment = commentId => 
   fetch(`${api}/comments/${commentId}`, {
     method: 'DELETE',
-    headers: {
-      ...headers,
-      'Content-Type': 'application/json',
-    },
+    headers,
   })
     .then(testRequestOK)
     .then(res => res.json())
+
 
 export const getPostComments = postId =>
   fetch(`${api}/posts/${postId}/comments`, { headers })

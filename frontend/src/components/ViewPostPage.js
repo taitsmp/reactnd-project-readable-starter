@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom'
 import FaThumbsDown from 'react-icons/lib/fa/thumbs-down'
 import FaThumbsUp from 'react-icons/lib/fa/thumbs-up'
 import FaEdit from 'react-icons/lib/fa/edit'
+import FaTrash from 'react-icons/lib/fa/trash'
 
 import * as Utils from '../utils/utils'
 import {
@@ -12,6 +13,7 @@ import {
   fetchPostComments,
   upVoteComment,
   downVoteComment,
+  deleteComment,
 } from '../actions/comments'
 import { fetchPosts } from '../actions/posts'
 //import { fetchCategories } from '../actions/categories'
@@ -40,6 +42,12 @@ class ViewPostPage extends Component {
     this.setState({
       [name]: value,
     })
+  }
+
+
+  handleDeleteComment = commentId => {
+    console.log(commentId, this.props.post.id)
+    this.props.removeComment(commentId, this.props.post.id)
   }
 
   handleEditComment = commentId => {
@@ -78,6 +86,8 @@ class ViewPostPage extends Component {
   handleSubmit = event => {
     event.preventDefault()
 
+
+    console.log("submit happened")
     const { post } = this.props
     const { commentInput, authorInput, commentAction } = this.state
 
@@ -87,7 +97,7 @@ class ViewPostPage extends Component {
       timestamp: Date.now(),
       body: commentInput,
       author: authorInput,
-      voteScore: 0,
+      voteScore: 1,
       deleted: false,
       parentDeleted: false,
     }
@@ -143,7 +153,7 @@ class ViewPostPage extends Component {
               <input type="submit" value="Submit" />
             </div>
             <div className="submit-container">
-              <button onClick={() => this.handleCancelComment()} className="standard">
+              <button type="button" onClick={() => this.handleCancelComment()} className="standard">
                 Cancel
               </button>
             </div>
@@ -170,6 +180,9 @@ class ViewPostPage extends Component {
                 </button>
                 <button onClick={() => this.handleEditComment(comment.id)} className="icon-btn">
                   <FaEdit />
+                </button>
+                <button onClick={() => this.handleDeleteComment(comment.id)} className="icon-btn">
+                  <FaTrash />
                 </button>
               </div>
             ))}
@@ -200,6 +213,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     fetchPosts: () => dispatch(fetchPosts()),
     fetchComments: postId => dispatch(fetchPostComments(postId)),
     postComment: comment => dispatch(postComment(comment)),
+    removeComment: (commentId, postId) => dispatch(deleteComment(commentId, postId)),
     putComment: comment => dispatch(putComment(comment)),
     upVoteComment: commentId => dispatch(upVoteComment(commentId)),
     downVoteComment: commentId => dispatch(downVoteComment(commentId)),

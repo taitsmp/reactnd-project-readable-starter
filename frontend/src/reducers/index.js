@@ -25,7 +25,7 @@ function comment(state = {}, action) {
       const { comments, postId } = action
       return {
         ...state,
-        [postId]: comments,
+        [postId]: comments.filter(c => c.deleted !== true),
       }
     }
     case UPDATE_COMMENT: {
