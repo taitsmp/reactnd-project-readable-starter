@@ -11,6 +11,7 @@ import {
   RECEIVE_POST_COMMENTS,
   CREATE_COMMENT,
   REMOVE_COMMENT,
+  UPDATE_COMMENT,
   INCREMENT_COMMENT_VOTE,
   DECREMENT_COMMENT_VOTE,
 } from '../actions/comments'
@@ -27,7 +28,17 @@ function comment(state = {}, action) {
         [postId]: comments,
       }
     }
-
+    case UPDATE_COMMENT: {
+      const { comment } = action
+      let postComments = state[comment.parentId]
+      return {
+        ...state,
+        [comment.parentId]: postComments.reduce((acc, c) => {
+          if (c.id === comment.id) c = comment
+          return acc.concat(c)
+        }, []),
+      }
+    }
     case CREATE_COMMENT: {
       const { comment } = action
       let postComments = state[comment.parentId] || []
@@ -92,9 +103,9 @@ function post(state = {}, action) {
 
     case CREATE_POST: {
       const { post } = action
-      const postArray = [...state.posts, post ]
+      const postArray = [...state.posts, post]
       return {
-        ...state, 
+        ...state,
         posts: postArray,
       }
     }

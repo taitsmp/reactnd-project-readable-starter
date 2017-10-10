@@ -30,6 +30,7 @@ class ViewPostPage extends Component {
     authorInput: '',
     commentInput: '',
     commentAction: 'create',
+    commentId: '',
   }
 
   //function to call whenever a form element changes
@@ -48,6 +49,7 @@ class ViewPostPage extends Component {
       authorInput: comment.author,
       commentInput: comment.body,
       commentAction: 'edit',
+      commentId,
     })
     const cform = document.getElementById('edit-comments')
     const top = cform.getBoundingClientRect().top + window.scrollY
@@ -91,7 +93,11 @@ class ViewPostPage extends Component {
     }
 
     if (commentAction === 'create') this.props.postComment(comment)
-    else this.props.putComment(comment)
+    else {
+      comment.id = this.state.commentId
+      console.log("putComment")
+      this.props.putComment(comment)
+    }
     this.setState({ commentInput: '', authorInput: '', commentAction: 'create' })
   }
 
@@ -99,7 +105,6 @@ class ViewPostPage extends Component {
     const { params } = this.props
     const post = this.props.post || {} //if empty show an error state. Coud use "defaultProps"
     const comments = this.props.comments
-    const bsize = 12
     console.log('comments=' + comments)
 
     console.log(post)
@@ -138,7 +143,9 @@ class ViewPostPage extends Component {
               <input type="submit" value="Submit" />
             </div>
             <div className="submit-container">
-              <button onClick={() => this.handleCancelComment() } className="standard" >Cancel</button>
+              <button onClick={() => this.handleCancelComment()} className="standard">
+                Cancel
+              </button>
             </div>
             <input
               ref={input => {
