@@ -1,14 +1,18 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-//import { Link } from 'react-router-dom'
-import { HashLink as Link } from 'react-router-hash-link'
-//import { FaThumbsDown, FaThumbsUp } from 'react-icons/fa'
+import { Link } from 'react-router-dom'
 import FaThumbsDown from 'react-icons/lib/fa/thumbs-down'
 import FaThumbsUp from 'react-icons/lib/fa/thumbs-up'
 import FaEdit from 'react-icons/lib/fa/edit'
 
 import * as Utils from '../utils/utils'
-import { postComment, fetchPostComments, upVoteComment, downVoteComment } from '../actions/comments'
+import {
+  postComment,
+  putComment,
+  fetchPostComments,
+  upVoteComment,
+  downVoteComment,
+} from '../actions/comments'
 import { fetchPosts } from '../actions/posts'
 //import { fetchCategories } from '../actions/categories'
 
@@ -25,6 +29,7 @@ class ViewPostPage extends Component {
   state = {
     authorInput: '',
     commentInput: '',
+    commentAction: 'create',
   }
 
   //function to call whenever a form element changes
@@ -36,16 +41,17 @@ class ViewPostPage extends Component {
     })
   }
 
-  handleEditComment = (commentId) => {
+  handleEditComment = commentId => {
     const comment = this.props.comments.find(c => c.id === commentId)
 
     this.setState({
       authorInput: comment.author,
       commentInput: comment.body,
+      commentAction: 'edit',
     })
     const cform = document.getElementById('edit-comments')
     const top = cform.getBoundingClientRect().top + window.scrollY
-    console.log("top is "+ top)
+    console.log('top is ' + top)
     window.scrollTo(0, top)
   }
 
@@ -62,12 +68,16 @@ class ViewPostPage extends Component {
     else this.props.downVoteComment(commentId)
   }
 
+  handleCancelComment = () => {
+    this.setState({ commentInput: '', authorInput: '', commentAction: 'create' })
+  }
+
   //creates new comment.
   handleSubmit = event => {
     event.preventDefault()
 
     const { post } = this.props
-    const { commentInput, authorInput } = this.state
+    const { commentInput, authorInput, commentAction } = this.state
 
     let comment = {
       id: Utils.uuid(),
@@ -80,9 +90,9 @@ class ViewPostPage extends Component {
       parentDeleted: false,
     }
 
-    //TODO: conditionally handle a create event or an update event.
-    this.props.postComment(comment)
-    this.setState({ commentInput: '', authorInput: '' })
+    if (commentAction === 'create') this.props.postComment(comment)
+    else this.props.putComment(comment)
+    this.setState({ commentInput: '', authorInput: '', commentAction: 'create' })
   }
 
   render() {
@@ -127,6 +137,17 @@ class ViewPostPage extends Component {
             <div className="submit-container">
               <input type="submit" value="Submit" />
             </div>
+            <div className="submit-container">
+              <button onClick={() => this.handleCancelComment() } className="standard" >Cancel</button>
+            </div>
+            <input
+              ref={input => {
+                this.submittedValue = input
+              }}
+              type="hidden"
+              name="submitted"
+              value="Submit"
+            />
           </form>
           <div className="comment-list">
             {comments.map(comment => (
@@ -140,13 +161,8 @@ class ViewPostPage extends Component {
                 <button onClick={() => this.handleVote('down', comment.id)} className="icon-btn">
                   <FaThumbsDown />
                 </button>
-                <Link to="#edit-comments">
-                  <button className="icon-btn">
-                    <FaEdit />
-                  </button>
-                </Link>
-                <button onClick={() => this.handleEditComment(comment.id)} className="icon-btn" >
-                <FaEdit />
+                <button onClick={() => this.handleEditComment(comment.id)} className="icon-btn">
+                  <FaEdit />
                 </button>
               </div>
             ))}
@@ -177,6 +193,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     fetchPosts: () => dispatch(fetchPosts()),
     fetchComments: postId => dispatch(fetchPostComments(postId)),
     postComment: comment => dispatch(postComment(comment)),
+    putComment: comment => dispatch(putComment(comment)),
     upVoteComment: commentId => dispatch(upVoteComment(commentId)),
     downVoteComment: commentId => dispatch(downVoteComment(commentId)),
   }

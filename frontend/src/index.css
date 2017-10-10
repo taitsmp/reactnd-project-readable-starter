@@ -34,7 +34,7 @@ select {
   
 }
 
-input, textarea, select {
+input, textarea, select, button.standard {
   /* To make sure that all text fields have the same font settings
      By default, textareas have a monospace font */
 
@@ -61,7 +61,7 @@ form {
     
 }
 
-form input[type="submit"]  { 
+form input[type="submit"], button.standard  { 
   margin-left: 95px;
 }
 
