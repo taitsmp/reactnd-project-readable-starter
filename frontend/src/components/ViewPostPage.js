@@ -67,8 +67,10 @@ class ViewPostPage extends Component {
 
   /*LEFT OFF HERE:
 
+https://review.udacity.com/#!/rubrics/1017/view
+
 PostsPage
-* show number of comments per post (?)
+* show number of comments per post 
 
 ViewPostPage:
 
