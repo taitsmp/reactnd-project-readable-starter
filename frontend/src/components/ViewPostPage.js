@@ -66,9 +66,27 @@ class ViewPostPage extends Component {
   }
 
   /*LEFT OFF HERE:
-* remove HashLink and react-router-hash-link
+
+PostsPage
+* show number of comments per post (?)
+
+ViewPostPage:
+
+show timestamp 
+controls to delete the post 
+order comments by votescore
+increment or decrement post vote score
+
+  cleanup
+
+  styling
 * https://medium.com/@aghh1504/4-four-ways-to-style-react-components-ac6f323da822 (styling)
 * https://www.sitepoint.com/style-react-components-styled-components/
+
+componentWillReceiveProps on EditPostPage
+    // * you might want to allow this to keep calling if update and no post.
+
+
 
 */
 

@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 import * as Utils from '../utils/utils'
-import { fetchPosts, postPost, putPost } from '../actions/posts'
+import { fetchPosts, postPost, putPost, deletePost } from '../actions/posts'
 import { fetchCategories } from '../actions/categories'
 
 //how to handle default state of forms
@@ -23,6 +23,10 @@ class EditPostPage extends Component {
     })
   }
 
+  handleDeletePost = postId => {
+    this.props.deletePost(postId)
+    this.props.history.push(`/`)
+  }
   //create or update a post
   handleSubmit = event => {
     event.preventDefault()
@@ -59,7 +63,6 @@ class EditPostPage extends Component {
   componentWillReceiveProps = nextProps => {
     let { post, mode, categories } = nextProps
 
-    //left off here.  you might want to allow this to keep calling if update and no post.
     console.log(this.state)
     console.log(this.props)
     console.log(nextProps)
@@ -137,7 +140,15 @@ class EditPostPage extends Component {
             <input type="submit" value="Submit" />
           </div>
         </form>
-        {mode === 'update' && <Link to={`/post/view/${post.id}`}>View the post</Link>}
+        {mode === 'update' && (
+          <div>
+            <Link to={`/post/view/${post.id}`}>View the post</Link> |
+            <Link to={`/`}>View all Posts</Link> |
+            <a href="#" onClick={() => this.handleDeletePost(post.id)}>
+              Delete this post
+            </a>
+          </div>
+        )}
       </div>
     )
   }
@@ -167,6 +178,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     fetchPosts: () => dispatch(fetchPosts()),
     postPost: post => dispatch(postPost(post)),
     putPost: post => dispatch(putPost(post)),
+    deletePost: postId => dispatch(deletePost(postId)),
     fetchCategories: () => dispatch(fetchCategories()),
   }
 }

@@ -82,7 +82,7 @@ function post(state = {}, action) {
 
       return {
         ...state,
-        posts,
+        posts: posts.filter(p => p.deleted === false),
       }
     }
 

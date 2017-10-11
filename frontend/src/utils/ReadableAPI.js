@@ -1,11 +1,5 @@
 const api = 'http://localhost:3001'
 
-//TODO: refactor API endpoints
-/*
- - this code taken from my-reads.  Refactor to call api endpoints from local server.
- - https://github.com/udacity/reactnd-project-readable-starter/tree/master/api-server
-*/
-
 // Generate a unique token for storing your bookshelf data on the backend server.
 let token = localStorage.token
 if (!token)
@@ -147,10 +141,7 @@ export const voteOnComment = (commentId, voteStr) => {
 export const deletePost = postId =>
   fetch(`${api}/posts/${postId}`, {
     method: 'DELETE',
-    headers: {
-      ...headers,
-      'Content-Type': 'application/json',
-    },
+    headers,
   })
     .then(testRequestOK)
     .then(res => res.json())
@@ -163,42 +154,9 @@ export const deleteComment = commentId =>
     .then(testRequestOK)
     .then(res => res.json())
 
-
 export const getPostComments = postId =>
   fetch(`${api}/posts/${postId}/comments`, { headers })
     .then(testRequestOK)
     .then(res => res.json())
 
-/*
-export const getAll = () =>
-  fetch(`${api}/books`, { headers })
-    .then(testRequestOK)  
-    .then(res => res.json())
-    .then(data => data.books)
 
-export const update = (book, shelf) =>
-  fetch(`${api}/books/${book.id}`, {
-    method: 'PUT',
-    headers: {
-      ...headers,
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({ shelf })
-  })
-    .then(testRequestOK)
-    .then(res => res.json())
-
-export const search = (query, maxResults) =>
-  fetch(`${api}/search`, {
-    method: 'POST',
-    headers: {
-      ...headers,
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({ query, maxResults })
-  })
-    .then(testRequestOK)
-    .then(res => res.json())
-    .then(data => data.books)
-
-*/

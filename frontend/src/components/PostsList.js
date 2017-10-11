@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import { upVotePost, downVotePost } from '../actions/posts'
+import sortBy from 'sort-by'
 
 class PostsList extends Component {
 
@@ -11,14 +12,28 @@ class PostsList extends Component {
     else this.props.downVotePost(postId)
   }
 
+  handleSortOrder = (field) => {
+    this.setState({ sortByField: field})
+  }
+
+  state = {
+    sortByField: '-voteScore',
+  }
+
   render() {
     let { posts, category } = this.props
+    let { sortByField } = this.state
     if (category) {
       posts = posts.filter(p => p.category === category)
     }
 
+    if (sortByField) posts = posts.sort(sortBy(sortByField))
+
     return (
       <div className="posts-list">
+        <div>
+         Sort by: <a href="#" onClick={() => this.handleSortOrder('-voteScore')}>Most Votes</a> | <a onClick={() => this.handleSortOrder('-timestamp')} href="#">Most Recent</a>
+        </div>
         <ol>
           {posts.map(post => (
             <li>
