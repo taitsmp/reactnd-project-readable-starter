@@ -27,11 +27,21 @@ const logJSON = json => {
   return json
 }
 
+export const addCommentCountsToPosts = (posts) => {
+
+  let postsWithCC = posts.map(p => getPostComments(p.id).then(comments => {
+    p.commentCount = comments.filter(c => c.deleted === false).length
+    return p
+  }))
+  return Promise.all(postsWithCC)
+}
+
 export const getAllPosts = () =>
   fetch(`${api}/posts`, { headers })
     .then(testRequestOK)
     .then(res => res.json())
     .then(logJSON)
+    .then(posts => addCommentCountsToPosts(posts))
 //.then(data => data.books)
 
 export const getAllCategories = () =>
@@ -44,7 +54,7 @@ export const getPostsByCategory = category =>
   fetch(`${api}/${category}/posts`, { headers })
     .then(testRequestOK)
     .then(res => res.json())
-//.then(data => data.books)
+    .then(posts => addCommentCountsToPosts(posts))
 
 export const createComment = comment => {
   console.log(JSON.stringify(comment))

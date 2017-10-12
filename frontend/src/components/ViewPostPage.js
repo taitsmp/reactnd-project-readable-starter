@@ -15,7 +15,7 @@ import {
   downVoteComment,
   deleteComment,
 } from '../actions/comments'
-import { fetchPosts } from '../actions/posts'
+import { fetchPosts, deletePost } from '../actions/posts'
 //import { fetchCategories } from '../actions/categories'
 
 class ViewPostPage extends Component {
@@ -44,7 +44,6 @@ class ViewPostPage extends Component {
     })
   }
 
-
   handleDeleteComment = commentId => {
     console.log(commentId, this.props.post.id)
     this.props.removeComment(commentId, this.props.post.id)
@@ -70,12 +69,9 @@ class ViewPostPage extends Component {
 https://review.udacity.com/#!/rubrics/1017/view
 
 PostsPage
-* show number of comments per post 
 
 ViewPostPage:
 
-show timestamp 
-controls to delete the post 
 order comments by votescore
 increment or decrement post vote score
 
@@ -92,6 +88,11 @@ componentWillReceiveProps on EditPostPage
 
 */
 
+  handleDeletePost = postId => {
+    this.props.deletePost(postId)
+    this.props.history.push(`/`)
+  }
+
   handleVote = (direction, commentId) => {
     //check name here and decide if we're upvoting or downvoting.
     if (direction === 'up') this.props.upVoteComment(commentId)
@@ -106,8 +107,7 @@ componentWillReceiveProps on EditPostPage
   handleSubmit = event => {
     event.preventDefault()
 
-
-    console.log("submit happened")
+    console.log('submit happened')
     const { post } = this.props
     const { commentInput, authorInput, commentAction } = this.state
 
@@ -125,7 +125,7 @@ componentWillReceiveProps on EditPostPage
     if (commentAction === 'create') this.props.postComment(comment)
     else {
       comment.id = this.state.commentId
-      console.log("putComment")
+      console.log('putComment')
       this.props.putComment(comment)
     }
     this.setState({ commentInput: '', authorInput: '', commentAction: 'create' })
@@ -135,6 +135,7 @@ componentWillReceiveProps on EditPostPage
     const { params } = this.props
     const post = this.props.post || {} //if empty show an error state. Coud use "defaultProps"
     const comments = this.props.comments
+    const date = Utils.dateFromTimestamp(post.timestamp)
     console.log('comments=' + comments)
 
     console.log(post)
@@ -144,6 +145,7 @@ componentWillReceiveProps on EditPostPage
           <div>title: "{post.title}"</div>
           <div>author: {post.author}</div>
           <div>category: {post.category}</div>
+          <div>Published: {date}</div>
           <div>body: {post.body}</div>
         </div>
         <div>
@@ -208,7 +210,10 @@ componentWillReceiveProps on EditPostPage
             ))}
           </div>
         </div>
-        <Link to={`/post/edit/${post.id}`}>Edit the post</Link>
+        <Link to={`/post/edit/${post.id}`}>Edit the post</Link> &nbsp; | &nbsp;
+        <a href="#" onClick={() => this.handleDeletePost(post.id)}>
+              Delete this post
+            </a>
       </div>
     )
   }
@@ -237,6 +242,8 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     putComment: comment => dispatch(putComment(comment)),
     upVoteComment: commentId => dispatch(upVoteComment(commentId)),
     downVoteComment: commentId => dispatch(downVoteComment(commentId)),
+    deletePost: postId => dispatch(deletePost(postId)),
+    
   }
 }
 

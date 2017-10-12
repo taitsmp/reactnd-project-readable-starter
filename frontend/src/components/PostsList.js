@@ -43,6 +43,7 @@ class PostsList extends Component {
               , Votes: {post.voteScore}
               <span onClick={() => this.handleVote('up', post.id)}> + </span> /
               <span onClick={() => this.handleVote('down', post.id)}> - </span>
+              Comments: {post.commentCount}
             </li>
           ))}
         </ol>
