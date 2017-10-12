@@ -4,19 +4,22 @@ import { Link } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import sortBy from 'sort-by'
 
-import { upVotePost, downVotePost } from '../actions/posts'
+import { upVotePost, downVotePost, deletePost } from '../actions/posts'
 
-//TODO: fix URLs to match rubric
 
 class PostsList extends Component {
+  handleDeletePost = postId => {
+    this.props.deletePost(postId)
+    if (this.props.history) this.props.history.push(`/`)
+  }
 
   handleVote = (direction, postId) => {
     if (direction === 'up') this.props.upVotePost(postId)
     else this.props.downVotePost(postId)
   }
 
-  handleSortOrder = (field) => {
-    this.setState({ sortByField: field})
+  handleSortOrder = field => {
+    this.setState({ sortByField: field  })
   }
 
   state = {
@@ -35,17 +38,28 @@ class PostsList extends Component {
     return (
       <div className="posts-list">
         <div>
-         Sort by: <a href="#" onClick={() => this.handleSortOrder('-voteScore')}>Most Votes</a> | <a onClick={() => this.handleSortOrder('-timestamp')} href="#">Most Recent</a>
+          Sort by:{' '}
+          <a href="#" onClick={() => this.handleSortOrder('-voteScore')}>
+            Most Votes
+          </a>{' '}
+          |{' '}
+          <a onClick={() => this.handleSortOrder('-timestamp')} href="#">
+            Most Recent
+          </a>
         </div>
         <ol>
           {posts.map(post => (
-            <li>
-              <Link to={`/post/view/${post.id}`}>
+            <li key={post.id}>
+              <Link to={`/${post.category}/${post.id}`}>
                 Title: {post.title}, Author: {post.author}, Comments: {post.commentCount}
               </Link>
               , Votes: {post.voteScore}
               <span onClick={() => this.handleVote('up', post.id)}> + </span> /
-              <span onClick={() => this.handleVote('down', post.id)}> - </span>
+              <span onClick={() => this.handleVote('down', post.id)}> - </span> &nbsp; | &nbsp;
+              <Link to={`/post/edit/${post.id}`}>Edit the post</Link> &nbsp; | &nbsp;
+              <a href="#" onClick={() => this.handleDeletePost(post.id)}>
+                Delete this post
+              </a>
             </li>
           ))}
         </ol>
@@ -69,6 +83,7 @@ function mapDispatchToProps(dispatch, ownProps) {
   return {
     upVotePost: postId => dispatch(upVotePost(postId)),
     downVotePost: postId => dispatch(downVotePost(postId)),
+    deletePost: postId => dispatch(deletePost(postId)),
   }
 }
 

@@ -12,8 +12,8 @@ class CategoriesList extends Component {
       <div className="categories-list">
         <ol>
           {categories.map(category => (
-            <li>
-              <Link to={`/by-category/${category.path}`}>{category.name}</Link>
+            <li key={category.path}>
+              <Link to={`/${category.path}`}>{category.name}</Link>
             </li>
           ))}
         </ol>

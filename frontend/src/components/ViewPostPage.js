@@ -6,7 +6,34 @@ import FaThumbsUp from 'react-icons/lib/fa/thumbs-up'
 import FaEdit from 'react-icons/lib/fa/edit'
 import FaTrash from 'react-icons/lib/fa/trash'
 import sortBy from 'sort-by'
+import * as ReadableAPI from '../utils/ReadableAPI'
 
+/*LEFT OFF HERE:
+
+//TODO: fix URLs to match rubric
+// * Delete fails from time to time.  Why?  More common when page has just been refreshed or random?
+// - tried to fix this on this page.  does it work?  hard to tell. 
+// - if I can't get this to work then don't redirect the user.  just wait for rerender and then they can click on the message to go home. 
+// - need to clean up all handleDeletePosts so that they all work the same way. 
+https://review.udacity.com/#!/rubrics/1017/view
+
+PostsPage
+
+ViewPostPage:
+
+
+  cleanup
+
+  styling
+* https://medium.com/@aghh1504/4-four-ways-to-style-react-components-ac6f323da822 (styling)
+* https://www.sitepoint.com/style-react-components-styled-components/
+
+componentWillReceiveProps on EditPostPage
+    // * you might want to allow this to keep calling if update and no post.
+
+
+
+*/
 
 import * as Utils from '../utils/utils'
 import {
@@ -17,7 +44,7 @@ import {
   downVoteComment,
   deleteComment,
 } from '../actions/comments'
-import { fetchPosts, deletePost, upVotePost, downVotePost } from '../actions/posts'
+import { fetchPosts, deletePost, removePost, upVotePost, downVotePost } from '../actions/posts'
 
 //import { fetchCategories } from '../actions/categories'
 
@@ -67,30 +94,9 @@ class ViewPostPage extends Component {
     window.scrollTo(0, top)
   }
 
-  /*LEFT OFF HERE:
-
-https://review.udacity.com/#!/rubrics/1017/view
-
-PostsPage
-
-ViewPostPage:
-
-
-  cleanup
-
-  styling
-* https://medium.com/@aghh1504/4-four-ways-to-style-react-components-ac6f323da822 (styling)
-* https://www.sitepoint.com/style-react-components-styled-components/
-
-componentWillReceiveProps on EditPostPage
-    // * you might want to allow this to keep calling if update and no post.
-
-
-
-*/
-
   handleDeletePost = postId => {
-    this.props.deletePost(postId)
+    this.props.removePost(postId)
+    ReadableAPI.deletePost(postId)
     this.props.history.push(`/`)
   }
 
@@ -131,7 +137,7 @@ componentWillReceiveProps on EditPostPage
     if (commentAction === 'create') this.props.postComment(comment)
     else {
       const oldComment = this.props.comments.find(c => c.id === commentId)
-      
+
       comment = {
         ...comment,
         id: oldComment.id,
@@ -154,80 +160,98 @@ componentWillReceiveProps on EditPostPage
 
     console.log(post)
     return (
-      <div className="view-post-page">
-        <div className="view-post">
-          <div>title: "{post.title}"</div>
-          <div>author: {post.author}</div>
-          <div>category: {post.category}</div>
-          <div>Published: {date}</div>
-          <div>Votes: {post.voteScore}</div>
-          <div>body: {post.body}</div>
-        </div>
-        <p/>
-        <div>
-          <Link to="/">Go Home</Link> &nbsp; | &nbsp; Vote on Post: 
-          <button onClick={() => this.handlePostVote('up', post.id)} className="icon-btn">
-                  <FaThumbsUp />
-                </button>
-                <button onClick={() => this.handlePostVote('down', post.id)} className="icon-btn">
-                  <FaThumbsDown />
-                </button> &nbsp; | &nbsp;
-                <Link to={`/post/edit/${post.id}`}>Edit the post</Link> &nbsp; | &nbsp;
-        <a href="#" onClick={() => this.handleDeletePost(post.id)}>
-              Delete this post
-        </a>
-        </div>
-        <div className="view-post-comments">
-          <h3>Comments</h3>
-          <form id="edit-comments" className="comment-form" onSubmit={this.handleSubmit}>
+      <div>
+        {post.id ? (
+          <div className="view-post-page">
+            <div className="view-post">
+              <div>title: "{post.title}"</div>
+              <div>author: {post.author}</div>
+              <div>category: {post.category}</div>
+              <div>Published: {date}</div>
+              <div>Votes: {post.voteScore}</div>
+              <div>body: {post.body}</div>
+            </div>
+            <p />
             <div>
-              <label htmlFor="authorInput">Author:</label>
-              <input
-                type="text"
-                value={this.state.authorInput}
-                onChange={this.handleInputChange}
-                name="authorInput"
-              />
-            </div>
-            <div>
-              <label htmlFor="commentInput">Comment:</label>
-              <textarea
-                value={this.state.commentInput}
-                onChange={this.handleInputChange}
-                name="commentInput"
-              />
-            </div>
-            <div className="submit-container">
-              <input type="submit" value="Submit" />
-            </div>
-            <div className="submit-container">
-              <button type="button" onClick={() => this.handleCancelComment()} className="standard">
-                Cancel
+              <Link to="/">Go Home</Link> &nbsp; | &nbsp; Vote on Post:
+              <button onClick={() => this.handlePostVote('up', post.id)} className="icon-btn">
+                <FaThumbsUp />
               </button>
+              <button onClick={() => this.handlePostVote('down', post.id)} className="icon-btn">
+                <FaThumbsDown />
+              </button>{' '}
+              &nbsp; | &nbsp;
+              <Link to={`/post/edit/${post.id}`}>Edit the post</Link> &nbsp; | &nbsp;
+              <a href="#" onClick={() => this.handleDeletePost(post.id)}>
+                Delete this post
+              </a>
             </div>
-          </form>
-          <div className="comment-list">
-            {comments.sort(sortBy("-voteScore")).map(comment => (
-              <div key={comment.id} className="comment">
-                <div>author: {comment.author}</div>
-                <div>{comment.body}</div>
-                <div>votes: {comment.voteScore}</div>
-                <button onClick={() => this.handleCommentVote('up', comment.id)} className="icon-btn">
-                  <FaThumbsUp />
-                </button>
-                <button onClick={() => this.handleCommentVote('down', comment.id)} className="icon-btn">
-                  <FaThumbsDown />
-                </button>
-                <button onClick={() => this.handleEditComment(comment.id)} className="icon-btn">
-                  <FaEdit />
-                </button>
-                <button onClick={() => this.handleDeleteComment(comment.id)} className="icon-btn">
-                  <FaTrash />
-                </button>
+            <div className="view-post-comments">
+              <h3>Comments</h3>
+              <form id="edit-comments" className="comment-form" onSubmit={this.handleSubmit}>
+                <div>
+                  <label htmlFor="authorInput">Author:</label>
+                  <input
+                    type="text"
+                    value={this.state.authorInput}
+                    onChange={this.handleInputChange}
+                    name="authorInput"
+                  />
+                </div>
+                <div>
+                  <label htmlFor="commentInput">Comment:</label>
+                  <textarea
+                    value={this.state.commentInput}
+                    onChange={this.handleInputChange}
+                    name="commentInput"
+                  />
+                </div>
+                <div className="submit-container">
+                  <input type="submit" value="Submit" />
+                </div>
+                <div className="submit-container">
+                  <button
+                    type="button"
+                    onClick={() => this.handleCancelComment()}
+                    className="standard">
+                    Cancel
+                  </button>
+                </div>
+              </form>
+              <div className="comment-list">
+                {comments.sort(sortBy('-voteScore')).map(comment => (
+                  <div key={comment.id} className="comment">
+                    <div>author: {comment.author}</div>
+                    <div>{comment.body}</div>
+                    <div>votes: {comment.voteScore}</div>
+                    <button
+                      onClick={() => this.handleCommentVote('up', comment.id)}
+                      className="icon-btn">
+                      <FaThumbsUp />
+                    </button>
+                    <button
+                      onClick={() => this.handleCommentVote('down', comment.id)}
+                      className="icon-btn">
+                      <FaThumbsDown />
+                    </button>
+                    <button onClick={() => this.handleEditComment(comment.id)} className="icon-btn">
+                      <FaEdit />
+                    </button>
+                    <button
+                      onClick={() => this.handleDeleteComment(comment.id)}
+                      className="icon-btn">
+                      <FaTrash />
+                    </button>
+                  </div>
+                ))}
               </div>
-            ))}
+            </div>
           </div>
-        </div>
+        ) : (
+          <div>
+            This post does not exist. <Link to="/">Go Home</Link>
+          </div>
+        )}
       </div>
     )
   }
@@ -257,9 +281,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     upVoteComment: commentId => dispatch(upVoteComment(commentId)),
     downVoteComment: commentId => dispatch(downVoteComment(commentId)),
     deletePost: postId => dispatch(deletePost(postId)),
+    removePost: postId => dispatch(removePost(postId)),
     upVotePost: postId => dispatch(upVotePost(postId)),
     downVotePost: postId => dispatch(downVotePost(postId)),
-    
   }
 }
 

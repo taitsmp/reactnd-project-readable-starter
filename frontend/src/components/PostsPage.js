@@ -22,13 +22,18 @@ class PostsPage extends Component {
 
     return (
       <div className="posts-page">
-        <Link to="/post/new/">
+        <Link to="/post/create/new/post">
           <button className="icon-btn">
             <FaPencil /> Create a new Post
           </button>
         </Link>
         <CategoriesList />
         <PostsList category={category} />
+        {category && (
+          <div>
+            <Link to="/">Go Home</Link>
+          </div>
+        )}
       </div>
     )
   }

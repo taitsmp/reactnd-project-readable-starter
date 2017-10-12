@@ -14,10 +14,10 @@ class App extends Component {
     return (
       <div className="App">
         <Route exact path="/" render={() => <PostsPage />} />
-        <Route path="/by-category/:category" component={PostsPage} />
-        <Route path="/post/view/:postId" component={ViewPostPage} />
+        <Route exact path="/:category/" component={PostsPage} />
+        <Route exact path="/:category/:postId" component={ViewPostPage} />
         <Route path="/post/edit/:postId" component={EditPostPage}  />
-        <Route path="/post/new/" component={EditPostPage} />
+        <Route path="/post/create/new/post" component={EditPostPage} />
       </div>
     )
   }

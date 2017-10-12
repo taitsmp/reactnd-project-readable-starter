@@ -142,7 +142,7 @@ class EditPostPage extends Component {
         </form>
         {mode === 'update' && (
           <div>
-            <Link to={`/post/view/${post.id}`}>View the post</Link> |
+            <Link to={`/${post.category}/${post.id}`}>View the post</Link> |
             <Link to={`/`}>View all Posts</Link> |
             <a href="#" onClick={() => this.handleDeletePost(post.id)}>
               Delete this post
