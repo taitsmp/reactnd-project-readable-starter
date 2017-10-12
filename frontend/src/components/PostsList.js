@@ -2,8 +2,11 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 import PropTypes from 'prop-types'
-import { upVotePost, downVotePost } from '../actions/posts'
 import sortBy from 'sort-by'
+
+import { upVotePost, downVotePost } from '../actions/posts'
+
+//TODO: fix URLs to match rubric
 
 class PostsList extends Component {
 
@@ -38,12 +41,11 @@ class PostsList extends Component {
           {posts.map(post => (
             <li>
               <Link to={`/post/view/${post.id}`}>
-                Title: {post.title} 
+                Title: {post.title}, Author: {post.author}, Comments: {post.commentCount}
               </Link>
               , Votes: {post.voteScore}
               <span onClick={() => this.handleVote('up', post.id)}> + </span> /
               <span onClick={() => this.handleVote('down', post.id)}> - </span>
-              Comments: {post.commentCount}
             </li>
           ))}
         </ol>

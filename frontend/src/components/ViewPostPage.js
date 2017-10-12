@@ -5,6 +5,8 @@ import FaThumbsDown from 'react-icons/lib/fa/thumbs-down'
 import FaThumbsUp from 'react-icons/lib/fa/thumbs-up'
 import FaEdit from 'react-icons/lib/fa/edit'
 import FaTrash from 'react-icons/lib/fa/trash'
+import sortBy from 'sort-by'
+
 
 import * as Utils from '../utils/utils'
 import {
@@ -15,7 +17,8 @@ import {
   downVoteComment,
   deleteComment,
 } from '../actions/comments'
-import { fetchPosts, deletePost } from '../actions/posts'
+import { fetchPosts, deletePost, upVotePost, downVotePost } from '../actions/posts'
+
 //import { fetchCategories } from '../actions/categories'
 
 class ViewPostPage extends Component {
@@ -72,8 +75,6 @@ PostsPage
 
 ViewPostPage:
 
-order comments by votescore
-increment or decrement post vote score
 
   cleanup
 
@@ -93,10 +94,15 @@ componentWillReceiveProps on EditPostPage
     this.props.history.push(`/`)
   }
 
-  handleVote = (direction, commentId) => {
+  handleCommentVote = (direction, commentId) => {
     //check name here and decide if we're upvoting or downvoting.
     if (direction === 'up') this.props.upVoteComment(commentId)
     else this.props.downVoteComment(commentId)
+  }
+
+  handlePostVote = (direction, postId) => {
+    if (direction === 'up') this.props.upVotePost(postId)
+    else this.props.downVotePost(postId)
   }
 
   handleCancelComment = () => {
@@ -109,7 +115,7 @@ componentWillReceiveProps on EditPostPage
 
     console.log('submit happened')
     const { post } = this.props
-    const { commentInput, authorInput, commentAction } = this.state
+    const { commentInput, authorInput, commentAction, commentId } = this.state
 
     let comment = {
       id: Utils.uuid(),
@@ -124,7 +130,15 @@ componentWillReceiveProps on EditPostPage
 
     if (commentAction === 'create') this.props.postComment(comment)
     else {
-      comment.id = this.state.commentId
+      const oldComment = this.props.comments.find(c => c.id === commentId)
+      
+      comment = {
+        ...comment,
+        id: oldComment.id,
+        timestamp: oldComment.timestamp,
+        voteScore: oldComment.voteScore,
+      }
+      comment.id = commentId
       console.log('putComment')
       this.props.putComment(comment)
     }
@@ -146,10 +160,22 @@ componentWillReceiveProps on EditPostPage
           <div>author: {post.author}</div>
           <div>category: {post.category}</div>
           <div>Published: {date}</div>
+          <div>Votes: {post.voteScore}</div>
           <div>body: {post.body}</div>
         </div>
+        <p/>
         <div>
-          <Link to="/">home</Link>
+          <Link to="/">Go Home</Link> &nbsp; | &nbsp; Vote on Post: 
+          <button onClick={() => this.handlePostVote('up', post.id)} className="icon-btn">
+                  <FaThumbsUp />
+                </button>
+                <button onClick={() => this.handlePostVote('down', post.id)} className="icon-btn">
+                  <FaThumbsDown />
+                </button> &nbsp; | &nbsp;
+                <Link to={`/post/edit/${post.id}`}>Edit the post</Link> &nbsp; | &nbsp;
+        <a href="#" onClick={() => this.handleDeletePost(post.id)}>
+              Delete this post
+        </a>
         </div>
         <div className="view-post-comments">
           <h3>Comments</h3>
@@ -179,25 +205,17 @@ componentWillReceiveProps on EditPostPage
                 Cancel
               </button>
             </div>
-            <input
-              ref={input => {
-                this.submittedValue = input
-              }}
-              type="hidden"
-              name="submitted"
-              value="Submit"
-            />
           </form>
           <div className="comment-list">
-            {comments.map(comment => (
+            {comments.sort(sortBy("-voteScore")).map(comment => (
               <div key={comment.id} className="comment">
                 <div>author: {comment.author}</div>
                 <div>{comment.body}</div>
                 <div>votes: {comment.voteScore}</div>
-                <button onClick={() => this.handleVote('up', comment.id)} className="icon-btn">
+                <button onClick={() => this.handleCommentVote('up', comment.id)} className="icon-btn">
                   <FaThumbsUp />
                 </button>
-                <button onClick={() => this.handleVote('down', comment.id)} className="icon-btn">
+                <button onClick={() => this.handleCommentVote('down', comment.id)} className="icon-btn">
                   <FaThumbsDown />
                 </button>
                 <button onClick={() => this.handleEditComment(comment.id)} className="icon-btn">
@@ -210,10 +228,6 @@ componentWillReceiveProps on EditPostPage
             ))}
           </div>
         </div>
-        <Link to={`/post/edit/${post.id}`}>Edit the post</Link> &nbsp; | &nbsp;
-        <a href="#" onClick={() => this.handleDeletePost(post.id)}>
-              Delete this post
-            </a>
       </div>
     )
   }
@@ -243,6 +257,8 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     upVoteComment: commentId => dispatch(upVoteComment(commentId)),
     downVoteComment: commentId => dispatch(downVoteComment(commentId)),
     deletePost: postId => dispatch(deletePost(postId)),
+    upVotePost: postId => dispatch(upVotePost(postId)),
+    downVotePost: postId => dispatch(downVotePost(postId)),
     
   }
 }
