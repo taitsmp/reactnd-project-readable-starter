@@ -10,9 +10,10 @@ import { fetchCategories } from '../actions/categories'
 
 class PostsPage extends Component {
   componentDidMount() {
-    const { dispatch } = this.props
-    dispatch(fetchPosts())
+    const { dispatch, posts } = this.props
+
     dispatch(fetchCategories())
+    if (!this.props.posts) dispatch(fetchPosts())
   }
 
   render() {

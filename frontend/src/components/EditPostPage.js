@@ -11,6 +11,7 @@ import { fetchCategories } from '../actions/categories'
 class EditPostPage extends Component {
   componentDidMount() {
     const { postId } = this.props.match.params
+
     this.props.fetchPosts()
     this.props.fetchCategories()
   }

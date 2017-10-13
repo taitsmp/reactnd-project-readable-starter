@@ -10,7 +10,6 @@ import { upVotePost, downVotePost, deletePost } from '../actions/posts'
 class PostsList extends Component {
   handleDeletePost = postId => {
     this.props.deletePost(postId)
-    if (this.props.history) this.props.history.push(`/`)
   }
 
   handleVote = (direction, postId) => {

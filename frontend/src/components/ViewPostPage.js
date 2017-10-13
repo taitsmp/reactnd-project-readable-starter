@@ -95,8 +95,7 @@ class ViewPostPage extends Component {
   }
 
   handleDeletePost = postId => {
-    this.props.removePost(postId)
-    ReadableAPI.deletePost(postId)
+    this.props.deletePost(postId)
     this.props.history.push(`/`)
   }
 
@@ -265,6 +264,8 @@ function mapStateToProps({ post, comment }, ownProps) {
   console.log('postId=' + postId)
   console.log(comments)
   console.log(ownProps)
+
+
   return {
     post: posts.find(p => p.id === postId) || {},
     comments,
