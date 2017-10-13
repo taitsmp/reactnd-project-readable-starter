@@ -77,6 +77,9 @@ class ViewPostPage extends Component {
   handleDeleteComment = commentId => {
     console.log(commentId, this.props.post.id)
     this.props.removeComment(commentId, this.props.post.id)
+    this.setState({
+      commentAction: 'create',
+    })
   }
 
   handleEditComment = commentId => {
@@ -264,7 +267,6 @@ function mapStateToProps({ post, comment }, ownProps) {
   console.log('postId=' + postId)
   console.log(comments)
   console.log(ownProps)
-
 
   return {
     post: posts.find(p => p.id === postId) || {},
