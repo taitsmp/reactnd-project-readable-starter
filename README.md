@@ -12,6 +12,8 @@ npm install
 
 # Running the Project
 
+Instructions assume your current working directory is `reactnd-project-readable-starter`.
+
 * Install and start the API server
     - `cd api-server`
     - `npm install`
