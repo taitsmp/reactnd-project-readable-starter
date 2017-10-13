@@ -4,9 +4,10 @@ Welcome to the Readable app.  This is my final version of the React/Redux projec
 
 ```
 git clone git@github.com:taitsmp/reactnd-project-readable-starter.git
-cd reactnd-project-readable-starter
+cd reactnd-project-readable-starter/api-server
 npm install
-
+cd ../frontend
+npm install
 ```
 
 # Running the Project
