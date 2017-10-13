@@ -1,9 +1,5 @@
 import React, { Component } from 'react'
-import { connect } from 'react-redux'
 import { Route } from 'react-router-dom'
-import { fetchPosts } from './actions/posts'
-import { fetchCategories } from './actions/categories'
-import logo from './logo.svg'
 import './App.css'
 import PostsPage from './components/PostsPage'
 import ViewPostPage from './components/ViewPostPage'
@@ -16,7 +12,7 @@ class App extends Component {
         <Route exact path="/" render={() => <PostsPage />} />
         <Route exact path="/:category/" component={PostsPage} />
         <Route exact path="/:category/:postId" component={ViewPostPage} />
-        <Route path="/post/edit/:postId" component={EditPostPage}  />
+        <Route path="/post/edit/:postId" component={EditPostPage} />
         <Route path="/post/create/new/post" component={EditPostPage} />
       </div>
     )

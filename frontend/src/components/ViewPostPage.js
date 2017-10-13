@@ -6,34 +6,6 @@ import FaThumbsUp from 'react-icons/lib/fa/thumbs-up'
 import FaEdit from 'react-icons/lib/fa/edit'
 import FaTrash from 'react-icons/lib/fa/trash'
 import sortBy from 'sort-by'
-import * as ReadableAPI from '../utils/ReadableAPI'
-
-/*LEFT OFF HERE:
-
-//TODO: fix URLs to match rubric
-// * Delete fails from time to time.  Why?  More common when page has just been refreshed or random?
-// - tried to fix this on this page.  does it work?  hard to tell. 
-// - if I can't get this to work then don't redirect the user.  just wait for rerender and then they can click on the message to go home. 
-// - need to clean up all handleDeletePosts so that they all work the same way. 
-https://review.udacity.com/#!/rubrics/1017/view
-
-PostsPage
-
-ViewPostPage:
-
-
-  cleanup
-
-  styling
-* https://medium.com/@aghh1504/4-four-ways-to-style-react-components-ac6f323da822 (styling)
-* https://www.sitepoint.com/style-react-components-styled-components/
-
-componentWillReceiveProps on EditPostPage
-    // * you might want to allow this to keep calling if update and no post.
-
-
-
-*/
 
 import * as Utils from '../utils/utils'
 import {
@@ -53,7 +25,6 @@ class ViewPostPage extends Component {
     const { postId } = this.props.match.params
     this.props.fetchPosts()
     if (postId) {
-      //console.log('fetch comments')
       this.props.fetchComments(postId)
     }
   }
@@ -68,14 +39,12 @@ class ViewPostPage extends Component {
   //function to call whenever a form element changes
   handleInputChange = event => {
     const { name, value } = event.target
-    console.log(name)
     this.setState({
       [name]: value,
     })
   }
 
   handleDeleteComment = commentId => {
-    console.log(commentId, this.props.post.id)
     this.props.removeComment(commentId, this.props.post.id)
     this.setState({
       commentAction: 'create',
@@ -93,7 +62,6 @@ class ViewPostPage extends Component {
     })
     const cform = document.getElementById('edit-comments')
     const top = cform.getBoundingClientRect().top + window.scrollY
-    console.log('top is ' + top)
     window.scrollTo(0, top)
   }
 
@@ -121,7 +89,6 @@ class ViewPostPage extends Component {
   handleSubmit = event => {
     event.preventDefault()
 
-    console.log('submit happened')
     const { post } = this.props
     const { commentInput, authorInput, commentAction, commentId } = this.state
 
@@ -147,20 +114,16 @@ class ViewPostPage extends Component {
         voteScore: oldComment.voteScore,
       }
       comment.id = commentId
-      console.log('putComment')
       this.props.putComment(comment)
     }
     this.setState({ commentInput: '', authorInput: '', commentAction: 'create' })
   }
 
   render() {
-    const { params } = this.props
     const post = this.props.post || {} //if empty show an error state. Coud use "defaultProps"
     const comments = this.props.comments
     const date = Utils.dateFromTimestamp(post.timestamp)
-    console.log('comments=' + comments)
 
-    console.log(post)
     return (
       <div>
         {post.id ? (
@@ -264,9 +227,6 @@ function mapStateToProps({ post, comment }, ownProps) {
   const params = ownProps.match.params || {}
   const postId = params.postId || 0
   const comments = comment[postId] || []
-  console.log('postId=' + postId)
-  console.log(comments)
-  console.log(ownProps)
 
   return {
     post: posts.find(p => p.id === postId) || {},

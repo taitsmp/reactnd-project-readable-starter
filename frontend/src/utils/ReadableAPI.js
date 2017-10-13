@@ -2,10 +2,12 @@ const api = 'http://localhost:3001'
 
 // Generate a unique token for storing your bookshelf data on the backend server.
 let token = localStorage.token
-if (!token)
-  token = localStorage.token = Math.random()
+if (!token) {
+  localStorage.token = Math.random()
     .toString(36)
     .substr(-8)
+  token = localStorage.token
+}
 
 const headers = {
   Accept: 'application/json',
@@ -27,12 +29,13 @@ const logJSON = json => {
   return json
 }
 
-export const addCommentCountsToPosts = (posts) => {
-
-  let postsWithCC = posts.map(p => getPostComments(p.id).then(comments => {
-    p.commentCount = comments.filter(c => c.deleted === false).length
-    return p
-  }))
+export const addCommentCountsToPosts = posts => {
+  let postsWithCC = posts.map(p =>
+    getPostComments(p.id).then(comments => {
+      p.commentCount = comments.filter(c => c.deleted === false).length
+      return p
+    })
+  )
   return Promise.all(postsWithCC)
 }
 
@@ -98,7 +101,7 @@ export const createPost = post => {
     .then(res => res.json())
 }
 
-//this will successfully set a category. 
+//this will successfully set a category.
 //curl -H 'Authorization: 9ssgac8o'  -H "Content-Type: application/json" -X PUT -d '{"category":"dorks", "title":"new title"}' localhost:3001/posts/y5n8ipw1g2
 export const updatePost = post => {
   //console.log(JSON.stringify(comment))
@@ -156,7 +159,7 @@ export const deletePost = postId =>
     .then(testRequestOK)
     .then(res => res.json())
 
-export const deleteComment = commentId => 
+export const deleteComment = commentId =>
   fetch(`${api}/comments/${commentId}`, {
     method: 'DELETE',
     headers,
@@ -168,5 +171,3 @@ export const getPostComments = postId =>
   fetch(`${api}/posts/${postId}/comments`, { headers })
     .then(testRequestOK)
     .then(res => res.json())
-
-

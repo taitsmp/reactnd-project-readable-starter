@@ -10,15 +10,12 @@ import { fetchCategories } from '../actions/categories'
 
 class EditPostPage extends Component {
   componentDidMount() {
-    const { postId } = this.props.match.params
-
     this.props.fetchPosts()
     this.props.fetchCategories()
   }
 
   handleInputChange = event => {
     const { name, value } = event.target
-    console.log(name)
     this.setState({
       [name]: value,
     })
@@ -64,9 +61,6 @@ class EditPostPage extends Component {
   componentWillReceiveProps = nextProps => {
     let { post, mode, categories } = nextProps
 
-    console.log(this.state)
-    console.log(this.props)
-    console.log(nextProps)
     if (this.state.initialized === false && mode === 'update' && post) {
       let nextState = {
         initialized: true,

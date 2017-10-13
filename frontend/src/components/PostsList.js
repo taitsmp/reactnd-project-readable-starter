@@ -6,7 +6,6 @@ import sortBy from 'sort-by'
 
 import { upVotePost, downVotePost, deletePost } from '../actions/posts'
 
-
 class PostsList extends Component {
   handleDeletePost = postId => {
     this.props.deletePost(postId)
@@ -18,7 +17,7 @@ class PostsList extends Component {
   }
 
   handleSortOrder = field => {
-    this.setState({ sortByField: field  })
+    this.setState({ sortByField: field })
   }
 
   state = {
@@ -68,8 +67,6 @@ class PostsList extends Component {
 }
 
 function mapStateToProps({ post }, ownProps) {
-  console.log(post.posts)
-
   let category = ownProps.category
 
   return {
@@ -84,6 +81,10 @@ function mapDispatchToProps(dispatch, ownProps) {
     downVotePost: postId => dispatch(downVotePost(postId)),
     deletePost: postId => dispatch(deletePost(postId)),
   }
+}
+
+PostsList.propTypes = {
+  category: PropTypes.string,
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(PostsList)
